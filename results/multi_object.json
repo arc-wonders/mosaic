@@ -1,0 +1,24 @@
+{
+  "n_collages": 600,
+  "objects": {
+    "both_objects_named": 0.83,
+    "at_least_one_named": 0.9933333333333333,
+    "mean_correct_per_collage": 1.8233333333333333,
+    "wrong_label_rate": 0.095,
+    "nothing_named": 0.006666666666666667
+  },
+  "masks": {
+    "both_objects_named": 0.8533333333333334,
+    "at_least_one_named": 0.9933333333333333,
+    "mean_correct_per_collage": 1.8466666666666667,
+    "wrong_label_rate": 0.15166666666666667,
+    "nothing_named": 0.005
+  },
+  "whole": {
+    "both_objects_named": 0.0,
+    "at_least_one_named": 0.13833333333333334,
+    "mean_correct_per_collage": 0.13833333333333334,
+    "wrong_label_rate": 0.0033333333333333335,
+    "nothing_named": 0.8583333333333333
+  }
+}

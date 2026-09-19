@@ -1,0 +1,188 @@
+{
+  "n_leaves_in_registry": 30,
+  "route_threshold": 0.44927283585071565,
+  "route_threshold_imagenet_calibration": 0.528368154168129,
+  "route_threshold_parts_calibration": 0.44927283585071565,
+  "instances": {
+    "person": {
+      "build": 350,
+      "calib": 53,
+      "test": 97
+    },
+    "face": {
+      "build": 352,
+      "calib": 49,
+      "test": 99
+    },
+    "hand": {
+      "build": 350,
+      "calib": 53,
+      "test": 97
+    },
+    "arm": {
+      "build": 350,
+      "calib": 50,
+      "test": 100
+    },
+    "leg": {
+      "build": 351,
+      "calib": 51,
+      "test": 98
+    },
+    "phone": {
+      "build": 288,
+      "calib": 41,
+      "test": 83
+    },
+    "bottle": {
+      "build": 350,
+      "calib": 50,
+      "test": 100
+    },
+    "cup": {
+      "build": 351,
+      "calib": 52,
+      "test": 97
+    },
+    "knife": {
+      "build": 350,
+      "calib": 50,
+      "test": 100
+    },
+    "ball": {
+      "build": 114,
+      "calib": 16,
+      "test": 33
+    },
+    "book": {
+      "build": 355,
+      "calib": 45,
+      "test": 100
+    }
+  },
+  "per_class": {
+    "person": {
+      "n_test": 97,
+      "accuracy_forced": 0.7938144329896907,
+      "accuracy_with_gates": 0.6597938144329897,
+      "unknown_rate": 0.24742268041237114,
+      "confused_with": {
+        "leg": 9,
+        "face": 5,
+        "arm": 5
+      }
+    },
+    "face": {
+      "n_test": 99,
+      "accuracy_forced": 0.9393939393939394,
+      "accuracy_with_gates": 0.8888888888888888,
+      "unknown_rate": 0.06060606060606061,
+      "confused_with": {
+        "arm": 2,
+        "hand": 2,
+        "leg": 1
+      }
+    },
+    "hand": {
+      "n_test": 97,
+      "accuracy_forced": 0.9381443298969072,
+      "accuracy_with_gates": 0.8556701030927835,
+      "unknown_rate": 0.08247422680412371,
+      "confused_with": {
+        "arm": 2,
+        "phone": 1,
+        "ball": 1
+      }
+    },
+    "arm": {
+      "n_test": 100,
+      "accuracy_forced": 0.57,
+      "accuracy_with_gates": 0.52,
+      "unknown_rate": 0.15,
+      "confused_with": {
+        "leg": 23,
+        "hand": 10,
+        "knife": 3
+      }
+    },
+    "leg": {
+      "n_test": 98,
+      "accuracy_forced": 0.673469387755102,
+      "accuracy_with_gates": 0.6224489795918368,
+      "unknown_rate": 0.07142857142857142,
+      "confused_with": {
+        "arm": 19,
+        "hand": 11,
+        "knife": 1
+      }
+    },
+    "phone": {
+      "n_test": 83,
+      "accuracy_forced": 0.7228915662650602,
+      "accuracy_with_gates": 0.6626506024096386,
+      "unknown_rate": 0.12048192771084337,
+      "confused_with": {
+        "knife": 8,
+        "hand": 6,
+        "bottle": 3
+      }
+    },
+    "bottle": {
+      "n_test": 100,
+      "accuracy_forced": 0.61,
+      "accuracy_with_gates": 0.57,
+      "unknown_rate": 0.09,
+      "confused_with": {
+        "cup": 23,
+        "arm": 5,
+        "leg": 4
+      }
+    },
+    "cup": {
+      "n_test": 97,
+      "accuracy_forced": 0.7731958762886598,
+      "accuracy_with_gates": 0.711340206185567,
+      "unknown_rate": 0.07216494845360824,
+      "confused_with": {
+        "bottle": 10,
+        "arm": 5,
+        "knife": 4
+      }
+    },
+    "knife": {
+      "n_test": 100,
+      "accuracy_forced": 0.83,
+      "accuracy_with_gates": 0.8,
+      "unknown_rate": 0.05,
+      "confused_with": {
+        "hand": 3,
+        "phone": 3,
+        "leg": 3
+      }
+    },
+    "ball": {
+      "n_test": 33,
+      "accuracy_forced": 0.7272727272727273,
+      "accuracy_with_gates": 0.696969696969697,
+      "unknown_rate": 0.12121212121212122,
+      "confused_with": {
+        "cup": 5,
+        "arm": 2,
+        "phone": 1
+      }
+    },
+    "book": {
+      "n_test": 100,
+      "accuracy_forced": 0.79,
+      "accuracy_with_gates": 0.77,
+      "unknown_rate": 0.06,
+      "confused_with": {
+        "knife": 14,
+        "phone": 3,
+        "cup": 2
+      }
+    }
+  },
+  "mean_accuracy_forced": 0.7607438418056442,
+  "mean_accuracy_with_gates": 0.7052511174155819
+}

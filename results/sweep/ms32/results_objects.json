@@ -1,0 +1,416 @@
+{
+  "config": {
+    "data": "data/raw",
+    "regions": "objects",
+    "min_side": 32,
+    "unknown_rate": 0.05,
+    "modules": "/tmp/claude-1000/-home-arkin-code/68e4c718-3d84-4034-9ba8-7d24d9bf9a66/scratchpad/mods_ms32",
+    "out": "results/sweep/ms32",
+    "n_build": 700,
+    "n_calib": 100,
+    "n_test": 200,
+    "knn": 5,
+    "top_k_per_level": [
+      1,
+      3
+    ]
+  },
+  "regions": {
+    "mean_per_image": 2.8487113402061857,
+    "distribution": {
+      "1": 8368,
+      "2": 3120,
+      "3": 2012,
+      "4": 1481,
+      "5": 1194,
+      "6": 1061,
+      "7": 951,
+      "8": 1213
+    },
+    "no_object_fallback_rate": 0.05231958762886598
+  },
+  "consensus_picked_other_than_top_objectness": {
+    "cat": 0.18,
+    "dog": 0.18142857142857144,
+    "elephant": 0.19142857142857142,
+    "zebra": 0.19142857142857142,
+    "eagle": 0.05857142857142857,
+    "owl": 0.03142857142857143,
+    "parrot": 0.18571428571428572,
+    "flamingo": 0.3157142857142857,
+    "penguin": 0.32142857142857145,
+    "sports car": 0.1442857142857143,
+    "pickup truck": 0.05857142857142857,
+    "school bus": 0.22857142857142856,
+    "scooter": 0.27714285714285714,
+    "airplane": 0.12142857142857143,
+    "apple": 0.2814285714285714,
+    "orange": 0.35,
+    "banana": 0.3485714285714286,
+    "strawberry": 0.35714285714285715,
+    "pineapple": 0.32857142857142857
+  },
+  "route_threshold": 0.5930694341659546,
+  "leaf_gate_percentile": 7.5,
+  "calib_unknown_rate_by_percentile": {
+    "1": 0.011052631578947368,
+    "2.5": 0.02157894736842105,
+    "5": 0.032105263157894734,
+    "7.5": 0.04631578947368421,
+    "10": 0.06526315789473684,
+    "12.5": 0.08263157894736842,
+    "15": 0.09947368421052631,
+    "20": 0.14263157894736841,
+    "25": 0.18473684210526317,
+    "30": 0.23526315789473684
+  },
+  "leaf_accept_thresholds": {
+    "cat": 0.7749922275543213,
+    "dog": 0.7331791520118713,
+    "elephant": 0.7994275689125061,
+    "zebra": 0.8228330016136169,
+    "eagle": 0.8018036484718323,
+    "owl": 0.8223106265068054,
+    "parrot": 0.7557098865509033,
+    "flamingo": 0.8153473138809204,
+    "penguin": 0.7751701474189758,
+    "sports car": 0.6588321924209595,
+    "pickup truck": 0.6796752214431763,
+    "school bus": 0.7141640186309814,
+    "scooter": 0.6834332346916199,
+    "airplane": 0.7263705730438232,
+    "apple": 0.7640209197998047,
+    "orange": 0.7604441046714783,
+    "banana": 0.7338584661483765,
+    "strawberry": 0.7690035700798035,
+    "pineapple": 0.7719908952713013
+  },
+  "E1_routing_of_labelled_object": {
+    "L1_domain_accuracy": 0.9873684210526316,
+    "L2_class_top1": 0.9502631578947368,
+    "L2_class_in_top3": 0.9747368421052631
+  },
+  "E2_accuracy": {
+    "mosaic": 0.9639473684210527,
+    "flat_knn_no_router": 0.9702631578947368,
+    "zero_shot_clip": 0.9655263157894737,
+    "linear_probe": 0.9707894736842105
+  },
+  "E2_true_label_among_objects": 0.9857894736842105,
+  "E2_per_domain": {
+    "animals": 0.98375,
+    "birds": 0.951,
+    "vehicles": 0.982,
+    "fruits": 0.943
+  },
+  "E2_per_class": {
+    "cat": 1.0,
+    "dog": 0.97,
+    "elephant": 0.975,
+    "zebra": 0.99,
+    "eagle": 0.965,
+    "owl": 0.975,
+    "parrot": 0.965,
+    "flamingo": 0.94,
+    "penguin": 0.91,
+    "sports car": 0.98,
+    "pickup truck": 0.975,
+    "school bus": 0.97,
+    "scooter": 0.99,
+    "airplane": 0.995,
+    "apple": 0.945,
+    "orange": 0.95,
+    "banana": 0.9,
+    "strawberry": 0.995,
+    "pineapple": 0.925
+  },
+  "E2_confusions": {
+    "penguin -> airplane": 10,
+    "banana -> apple": 9,
+    "dog -> cat": 6,
+    "flamingo -> airplane": 5,
+    "orange -> apple": 5,
+    "eagle -> airplane": 4,
+    "penguin -> scooter": 4,
+    "banana -> orange": 4,
+    "pineapple -> banana": 4,
+    "owl -> banana": 3,
+    "pickup truck -> sports car": 3,
+    "school bus -> pickup truck": 3,
+    "apple -> pineapple": 3,
+    "apple -> orange": 3,
+    "orange -> banana": 3
+  },
+  "E3_abstention": {
+    "in_domain_image_unknown_rate": 0.05,
+    "in_domain_accuracy_with_gates": 0.9194736842105263,
+    "in_domain_extra_wrong_label_rate": 0.1881578947368421,
+    "lemon_image_rejected": 0.03,
+    "pizza_image_rejected": 0.605
+  },
+  "E4_plug": {
+    "plug_out_class": {
+      "cat": {
+        "its_images_unknown": 0.64,
+        "its_images_mislabelled": 0.36,
+        "mislabelled_as": {
+          "dog": 59,
+          "airplane": 8,
+          "school bus": 3
+        },
+        "other_images_changed": 6,
+        "identical_after_replug": true
+      },
+      "dog": {
+        "its_images_unknown": 0.785,
+        "its_images_mislabelled": 0.215,
+        "mislabelled_as": {
+          "airplane": 17,
+          "cat": 12,
+          "scooter": 6
+        },
+        "other_images_changed": 6,
+        "identical_after_replug": true
+      },
+      "elephant": {
+        "its_images_unknown": 0.85,
+        "its_images_mislabelled": 0.15,
+        "mislabelled_as": {
+          "penguin": 12,
+          "airplane": 7,
+          "scooter": 5
+        },
+        "other_images_changed": 4,
+        "identical_after_replug": true
+      },
+      "zebra": {
+        "its_images_unknown": 0.95,
+        "its_images_mislabelled": 0.05,
+        "mislabelled_as": {
+          "scooter": 4,
+          "airplane": 2,
+          "penguin": 1
+        },
+        "other_images_changed": 3,
+        "identical_after_replug": true
+      },
+      "eagle": {
+        "its_images_unknown": 0.875,
+        "its_images_mislabelled": 0.125,
+        "mislabelled_as": {
+          "owl": 14,
+          "airplane": 7,
+          "banana": 3
+        },
+        "other_images_changed": 3,
+        "identical_after_replug": true
+      },
+      "owl": {
+        "its_images_unknown": 0.885,
+        "its_images_mislabelled": 0.115,
+        "mislabelled_as": {
+          "eagle": 16,
+          "airplane": 3,
+          "banana": 3
+        },
+        "other_images_changed": 1,
+        "identical_after_replug": true
+      },
+      "parrot": {
+        "its_images_unknown": 0.875,
+        "its_images_mislabelled": 0.125,
+        "mislabelled_as": {
+          "scooter": 7,
+          "banana": 5,
+          "airplane": 5
+        },
+        "other_images_changed": 1,
+        "identical_after_replug": true
+      },
+      "flamingo": {
+        "its_images_unknown": 0.545,
+        "its_images_mislabelled": 0.455,
+        "mislabelled_as": {
+          "parrot": 73,
+          "airplane": 8,
+          "banana": 3
+        },
+        "other_images_changed": 1,
+        "identical_after_replug": true
+      },
+      "penguin": {
+        "its_images_unknown": 0.74,
+        "its_images_mislabelled": 0.26,
+        "mislabelled_as": {
+          "airplane": 28,
+          "scooter": 9,
+          "school bus": 6
+        },
+        "other_images_changed": 5,
+        "identical_after_replug": true
+      },
+      "sports car": {
+        "its_images_unknown": 0.6,
+        "its_images_mislabelled": 0.4,
+        "mislabelled_as": {
+          "airplane": 31,
+          "scooter": 31,
+          "school bus": 14
+        },
+        "other_images_changed": 15,
+        "identical_after_replug": true
+      },
+      "pickup truck": {
+        "its_images_unknown": 0.385,
+        "its_images_mislabelled": 0.615,
+        "mislabelled_as": {
+          "airplane": 44,
+          "sports car": 34,
+          "school bus": 26
+        },
+        "other_images_changed": 11,
+        "identical_after_replug": true
+      },
+      "school bus": {
+        "its_images_unknown": 0.7,
+        "its_images_mislabelled": 0.3,
+        "mislabelled_as": {
+          "airplane": 30,
+          "scooter": 21,
+          "pickup truck": 6
+        },
+        "other_images_changed": 27,
+        "identical_after_replug": true
+      },
+      "scooter": {
+        "its_images_unknown": 0.5,
+        "its_images_mislabelled": 0.5,
+        "mislabelled_as": {
+          "airplane": 55,
+          "sports car": 28,
+          "school bus": 15
+        },
+        "other_images_changed": 30,
+        "identical_after_replug": true
+      },
+      "airplane": {
+        "its_images_unknown": 0.84,
+        "its_images_mislabelled": 0.16,
+        "mislabelled_as": {
+          "scooter": 19,
+          "school bus": 8,
+          "sports car": 2
+        },
+        "other_images_changed": 51,
+        "identical_after_replug": true
+      },
+      "apple": {
+        "its_images_unknown": 0.165,
+        "its_images_mislabelled": 0.835,
+        "mislabelled_as": {
+          "orange": 64,
+          "strawberry": 50,
+          "banana": 43
+        },
+        "other_images_changed": 25,
+        "identical_after_replug": true
+      },
+      "orange": {
+        "its_images_unknown": 0.15,
+        "its_images_mislabelled": 0.85,
+        "mislabelled_as": {
+          "apple": 77,
+          "banana": 67,
+          "pineapple": 12
+        },
+        "other_images_changed": 15,
+        "identical_after_replug": true
+      },
+      "banana": {
+        "its_images_unknown": 0.405,
+        "its_images_mislabelled": 0.595,
+        "mislabelled_as": {
+          "orange": 52,
+          "apple": 37,
+          "pineapple": 18
+        },
+        "other_images_changed": 21,
+        "identical_after_replug": true
+      },
+      "strawberry": {
+        "its_images_unknown": 0.295,
+        "its_images_mislabelled": 0.705,
+        "mislabelled_as": {
+          "apple": 55,
+          "pineapple": 39,
+          "orange": 32
+        },
+        "other_images_changed": 13,
+        "identical_after_replug": true
+      },
+      "pineapple": {
+        "its_images_unknown": 0.54,
+        "its_images_mislabelled": 0.46,
+        "mislabelled_as": {
+          "banana": 62,
+          "orange": 14,
+          "strawberry": 8
+        },
+        "other_images_changed": 12,
+        "identical_after_replug": true
+      }
+    },
+    "plug_out_domain": {
+      "animals": {
+        "its_images_unknown": 0.87625,
+        "its_images_mislabelled": 0.12375,
+        "mislabelled_as": {
+          "airplane": 37,
+          "penguin": 20,
+          "scooter": 18
+        },
+        "other_images_changed": 1,
+        "identical_after_replug": true
+      },
+      "birds": {
+        "its_images_unknown": 0.89,
+        "its_images_mislabelled": 0.11,
+        "mislabelled_as": {
+          "airplane": 59,
+          "banana": 18,
+          "scooter": 18
+        },
+        "other_images_changed": 2,
+        "identical_after_replug": true
+      },
+      "vehicles": {
+        "its_images_unknown": 0.97,
+        "its_images_mislabelled": 0.03,
+        "mislabelled_as": {
+          "banana": 21,
+          "strawberry": 2,
+          "penguin": 2
+        },
+        "other_images_changed": 36,
+        "identical_after_replug": true
+      },
+      "fruits": {
+        "its_images_unknown": 0.878,
+        "its_images_mislabelled": 0.122,
+        "mislabelled_as": {
+          "airplane": 65,
+          "scooter": 45,
+          "school bus": 11
+        },
+        "other_images_changed": 9,
+        "identical_after_replug": true
+      }
+    },
+    "class_plug_out_mislabelled_mean": 0.3828947368421052,
+    "linear_probe_retrain_ms": 4627.03995999982
+  },
+  "E5_text": {
+    "leaf_route_accuracy": 1.0,
+    "mean_precision_at_50": 1.0
+  }
+}

@@ -1,0 +1,310 @@
+{
+  "clip-b32 (current)": {
+    "dim": 512,
+    "images_per_s": 353.2,
+    "knn": {
+      "accuracy": 0.5597,
+      "accuracy_anatomy_credit": 0.8726,
+      "per_part": {
+        "person": 0.541,
+        "head": 0.342,
+        "face": 0.602,
+        "hair": 0.522,
+        "eye": 0.866,
+        "nose": 0.881,
+        "mouth": 0.777,
+        "ear": 0.603,
+        "arm": 0.506,
+        "hand": 0.654,
+        "leg": 0.4,
+        "foot": 0.27
+      }
+    },
+    "routed": {
+      "accuracy": 0.5597,
+      "accuracy_anatomy_credit": 0.8688,
+      "per_part": {
+        "person": 0.551,
+        "head": 0.349,
+        "face": 0.584,
+        "hair": 0.489,
+        "eye": 0.877,
+        "nose": 0.866,
+        "mouth": 0.785,
+        "ear": 0.616,
+        "arm": 0.501,
+        "hand": 0.668,
+        "leg": 0.422,
+        "foot": 0.27
+      },
+      "region_correct": 0.7684,
+      "part_among_kept": 0.8917
+    },
+    "n_build": 11434,
+    "n_test": 3407
+  },
+  "clip-l14 dfn2b": {
+    "dim": 768,
+    "images_per_s": 57.0,
+    "knn": {
+      "accuracy": 0.5782,
+      "accuracy_anatomy_credit": 0.8896,
+      "per_part": {
+        "person": 0.527,
+        "head": 0.309,
+        "face": 0.749,
+        "hair": 0.483,
+        "eye": 0.882,
+        "nose": 0.91,
+        "mouth": 0.792,
+        "ear": 0.616,
+        "arm": 0.533,
+        "hand": 0.732,
+        "leg": 0.449,
+        "foot": 0.459
+      }
+    },
+    "routed": {
+      "accuracy": 0.5797,
+      "accuracy_anatomy_credit": 0.8917,
+      "per_part": {
+        "person": 0.535,
+        "head": 0.3,
+        "face": 0.746,
+        "hair": 0.481,
+        "eye": 0.861,
+        "nose": 0.896,
+        "mouth": 0.808,
+        "ear": 0.726,
+        "arm": 0.543,
+        "hand": 0.722,
+        "leg": 0.438,
+        "foot": 0.486
+      },
+      "region_correct": 0.8127,
+      "part_among_kept": 0.9143
+    },
+    "n_build": 11434,
+    "n_test": 3407
+  },
+  "eva02-l14": {
+    "dim": 768,
+    "images_per_s": 61.1,
+    "knn": {
+      "accuracy": 0.5565,
+      "accuracy_anatomy_credit": 0.8987,
+      "per_part": {
+        "person": 0.471,
+        "head": 0.346,
+        "face": 0.529,
+        "hair": 0.467,
+        "eye": 0.92,
+        "nose": 0.891,
+        "mouth": 0.792,
+        "ear": 0.644,
+        "arm": 0.557,
+        "hand": 0.756,
+        "leg": 0.53,
+        "foot": 0.486
+      }
+    },
+    "routed": {
+      "accuracy": 0.5612,
+      "accuracy_anatomy_credit": 0.9017,
+      "per_part": {
+        "person": 0.495,
+        "head": 0.305,
+        "face": 0.538,
+        "hair": 0.45,
+        "eye": 0.914,
+        "nose": 0.91,
+        "mouth": 0.808,
+        "ear": 0.753,
+        "arm": 0.56,
+        "hand": 0.751,
+        "leg": 0.541,
+        "foot": 0.514
+      },
+      "region_correct": 0.8004,
+      "part_among_kept": 0.9172
+    },
+    "n_build": 11434,
+    "n_test": 3407
+  },
+  "siglip-so400m": {
+    "dim": 1152,
+    "images_per_s": 37.8,
+    "knn": {
+      "accuracy": 0.6222,
+      "accuracy_anatomy_credit": 0.9155,
+      "per_part": {
+        "person": 0.574,
+        "head": 0.349,
+        "face": 0.645,
+        "hair": 0.556,
+        "eye": 0.914,
+        "nose": 0.935,
+        "mouth": 0.792,
+        "ear": 0.808,
+        "arm": 0.645,
+        "hand": 0.776,
+        "leg": 0.541,
+        "foot": 0.541
+      }
+    },
+    "routed": {
+      "accuracy": 0.6193,
+      "accuracy_anatomy_credit": 0.9125,
+      "per_part": {
+        "person": 0.581,
+        "head": 0.351,
+        "face": 0.618,
+        "hair": 0.533,
+        "eye": 0.909,
+        "nose": 0.94,
+        "mouth": 0.792,
+        "ear": 0.822,
+        "arm": 0.665,
+        "hand": 0.756,
+        "leg": 0.514,
+        "foot": 0.541
+      },
+      "region_correct": 0.8403,
+      "part_among_kept": 0.9278
+    },
+    "n_build": 11434,
+    "n_test": 3407
+  },
+  "clip-h14 dfn5b": {
+    "dim": 1024,
+    "images_per_s": 36.5,
+    "knn": {
+      "accuracy": 0.6117,
+      "accuracy_anatomy_credit": 0.907,
+      "per_part": {
+        "person": 0.569,
+        "head": 0.342,
+        "face": 0.685,
+        "hair": 0.533,
+        "eye": 0.882,
+        "nose": 0.93,
+        "mouth": 0.831,
+        "ear": 0.781,
+        "arm": 0.587,
+        "hand": 0.766,
+        "leg": 0.524,
+        "foot": 0.541
+      }
+    },
+    "routed": {
+      "accuracy": 0.6049,
+      "accuracy_anatomy_credit": 0.9075,
+      "per_part": {
+        "person": 0.569,
+        "head": 0.335,
+        "face": 0.651,
+        "hair": 0.522,
+        "eye": 0.888,
+        "nose": 0.91,
+        "mouth": 0.831,
+        "ear": 0.781,
+        "arm": 0.587,
+        "hand": 0.741,
+        "leg": 0.535,
+        "foot": 0.568
+      },
+      "region_correct": 0.8283,
+      "part_among_kept": 0.926
+    },
+    "n_build": 11434,
+    "n_test": 3407
+  },
+  "dinov2-base": {
+    "dim": 768,
+    "images_per_s": 208.0,
+    "knn": {
+      "accuracy": 0.5674,
+      "accuracy_anatomy_credit": 0.8744,
+      "per_part": {
+        "person": 0.649,
+        "head": 0.358,
+        "face": 0.544,
+        "hair": 0.411,
+        "eye": 0.861,
+        "nose": 0.876,
+        "mouth": 0.792,
+        "ear": 0.712,
+        "arm": 0.433,
+        "hand": 0.698,
+        "leg": 0.335,
+        "foot": 0.541
+      }
+    },
+    "routed": {
+      "accuracy": 0.5644,
+      "accuracy_anatomy_credit": 0.8694,
+      "per_part": {
+        "person": 0.622,
+        "head": 0.353,
+        "face": 0.557,
+        "hair": 0.411,
+        "eye": 0.84,
+        "nose": 0.896,
+        "mouth": 0.8,
+        "ear": 0.699,
+        "arm": 0.45,
+        "hand": 0.693,
+        "leg": 0.357,
+        "foot": 0.568
+      },
+      "region_correct": 0.7722,
+      "part_among_kept": 0.8893
+    },
+    "n_build": 11434,
+    "n_test": 3407
+  },
+  "dinov2-large": {
+    "dim": 1024,
+    "images_per_s": 74.3,
+    "knn": {
+      "accuracy": 0.5547,
+      "accuracy_anatomy_credit": 0.8802,
+      "per_part": {
+        "person": 0.609,
+        "head": 0.372,
+        "face": 0.486,
+        "hair": 0.383,
+        "eye": 0.909,
+        "nose": 0.876,
+        "mouth": 0.869,
+        "ear": 0.712,
+        "arm": 0.416,
+        "hand": 0.639,
+        "leg": 0.411,
+        "foot": 0.541
+      }
+    },
+    "routed": {
+      "accuracy": 0.5568,
+      "accuracy_anatomy_credit": 0.8811,
+      "per_part": {
+        "person": 0.606,
+        "head": 0.374,
+        "face": 0.443,
+        "hair": 0.381,
+        "eye": 0.898,
+        "nose": 0.9,
+        "mouth": 0.862,
+        "ear": 0.781,
+        "arm": 0.428,
+        "hand": 0.668,
+        "leg": 0.432,
+        "foot": 0.595
+      },
+      "region_correct": 0.7488,
+      "part_among_kept": 0.8729
+    },
+    "n_build": 11434,
+    "n_test": 3407
+  }
+}

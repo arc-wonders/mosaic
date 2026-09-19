@@ -1,0 +1,622 @@
+{
+  "counts": {
+    "person": {
+      "gt_build": 2817,
+      "gt_test": 860,
+      "detector_positives_build": 2251
+    },
+    "head": {
+      "gt_build": 1337,
+      "gt_test": 433,
+      "detector_positives_build": 162
+    },
+    "face": {
+      "gt_build": 1099,
+      "gt_test": 327,
+      "detector_positives_build": 72
+    },
+    "hair": {
+      "gt_build": 1319,
+      "gt_test": 360,
+      "detector_positives_build": 197
+    },
+    "eye": {
+      "gt_build": 541,
+      "gt_test": 187,
+      "detector_positives_build": 2
+    },
+    "nose": {
+      "gt_build": 666,
+      "gt_test": 201,
+      "detector_positives_build": 1
+    },
+    "mouth": {
+      "gt_build": 432,
+      "gt_test": 130,
+      "detector_positives_build": 9
+    },
+    "ear": {
+      "gt_build": 228,
+      "gt_test": 73,
+      "detector_positives_build": 14
+    },
+    "arm": {
+      "gt_build": 1398,
+      "gt_test": 409,
+      "detector_positives_build": 137
+    },
+    "hand": {
+      "gt_build": 749,
+      "gt_test": 205,
+      "detector_positives_build": 85
+    },
+    "leg": {
+      "gt_build": 696,
+      "gt_test": 185,
+      "detector_positives_build": 127
+    },
+    "foot": {
+      "gt_build": 152,
+      "gt_test": 37,
+      "detector_positives_build": 36
+    }
+  },
+  "negatives_build": 7282,
+  "proposals": {
+    "test": 4189,
+    "calib": 1970,
+    "build": 14208
+  },
+  "versions": {
+    "A": {
+      "gt": {
+        "n": 3407,
+        "domain_is_people": 0.9492,
+        "region_correct": 0.7329,
+        "part_ranked_first_by_router": 0.5142,
+        "part_among_kept_candidates": 0.8485,
+        "accuracy_forced": 0.4822,
+        "accuracy_with_gates": 0.479,
+        "unknown_rate": 0.0082,
+        "errors_anatomically_adjacent": 0.6514,
+        "errors_outside_people": 0.0981,
+        "per_part_accuracy_forced": {
+          "person": 0.292,
+          "head": 0.323,
+          "face": 0.609,
+          "hair": 0.461,
+          "eye": 0.856,
+          "nose": 0.871,
+          "mouth": 0.815,
+          "ear": 0.699,
+          "arm": 0.379,
+          "hand": 0.663,
+          "leg": 0.497,
+          "foot": 0.324
+        },
+        "top_confusions": {
+          "head -> face": 129,
+          "person -> head": 123,
+          "person -> face": 115,
+          "person -> hair": 101,
+          "head -> hair": 100,
+          "person -> leg": 87,
+          "arm -> hand": 84,
+          "person -> arm": 74,
+          "hair -> head": 74,
+          "face -> head": 65,
+          "arm -> leg": 55,
+          "leg -> arm": 38
+        }
+      },
+      "proposals": {
+        "n": 4189,
+        "per_part": {
+          "person": {
+            "precision": 0.41,
+            "recall": 0.317,
+            "f1": 0.358,
+            "n_true": 643
+          },
+          "head": {
+            "precision": 0.057,
+            "recall": 0.354,
+            "f1": 0.099,
+            "n_true": 48
+          },
+          "face": {
+            "precision": 0.046,
+            "recall": 0.423,
+            "f1": 0.083,
+            "n_true": 26
+          },
+          "hair": {
+            "precision": 0.087,
+            "recall": 0.417,
+            "f1": 0.144,
+            "n_true": 60
+          },
+          "eye": {
+            "precision": 0.022,
+            "recall": 1.0,
+            "f1": 0.044,
+            "n_true": 3
+          },
+          "nose": {
+            "precision": 0.015,
+            "recall": 1.0,
+            "f1": 0.03,
+            "n_true": 2
+          },
+          "mouth": {
+            "precision": 0.067,
+            "recall": 0.75,
+            "f1": 0.124,
+            "n_true": 8
+          },
+          "ear": {
+            "precision": 0.057,
+            "recall": 1.0,
+            "f1": 0.107,
+            "n_true": 3
+          },
+          "arm": {
+            "precision": 0.024,
+            "recall": 0.245,
+            "f1": 0.044,
+            "n_true": 53
+          },
+          "hand": {
+            "precision": 0.089,
+            "recall": 0.583,
+            "f1": 0.154,
+            "n_true": 36
+          },
+          "leg": {
+            "precision": 0.026,
+            "recall": 0.467,
+            "f1": 0.049,
+            "n_true": 30
+          },
+          "foot": {
+            "precision": 0.077,
+            "recall": 0.238,
+            "f1": 0.116,
+            "n_true": 21
+          }
+        },
+        "mean_f1": 0.113,
+        "non_elements_accepted_as_body_part": 0.587,
+        "clothing_and_accessories_called": {
+          "person": 187,
+          "leg": 167,
+          "arm": 156,
+          "hair": 117,
+          "face": 88,
+          "head": 87
+        }
+      },
+      "nonhuman": {
+        "n": 703,
+        "routed_to_people": 0.021,
+        "accepted_as_people": 0.013
+      }
+    },
+    "B": {
+      "gt": {
+        "n": 3407,
+        "domain_is_people": 0.9266,
+        "region_correct": 0.7388,
+        "part_ranked_first_by_router": 0.5116,
+        "part_among_kept_candidates": 0.8342,
+        "accuracy_forced": 0.4987,
+        "accuracy_with_gates": 0.4952,
+        "unknown_rate": 0.0082,
+        "errors_anatomically_adjacent": 0.6148,
+        "errors_outside_people": 0.1464,
+        "per_part_accuracy_forced": {
+          "person": 0.42,
+          "head": 0.314,
+          "face": 0.563,
+          "hair": 0.481,
+          "eye": 0.872,
+          "nose": 0.846,
+          "mouth": 0.754,
+          "ear": 0.658,
+          "arm": 0.318,
+          "hand": 0.668,
+          "leg": 0.459,
+          "foot": 0.378
+        },
+        "top_confusions": {
+          "head -> face": 115,
+          "person -> head": 109,
+          "head -> hair": 104,
+          "person -> hair": 95,
+          "arm -> hand": 78,
+          "hair -> head": 75,
+          "person -> face": 63,
+          "person -> leg": 63,
+          "face -> head": 60,
+          "arm -> leg": 59,
+          "person -> arm": 45,
+          "arm -> person": 34
+        }
+      },
+      "proposals": {
+        "n": 4189,
+        "per_part": {
+          "person": {
+            "precision": 0.365,
+            "recall": 0.407,
+            "f1": 0.385,
+            "n_true": 643
+          },
+          "head": {
+            "precision": 0.084,
+            "recall": 0.417,
+            "f1": 0.14,
+            "n_true": 48
+          },
+          "face": {
+            "precision": 0.084,
+            "recall": 0.462,
+            "f1": 0.142,
+            "n_true": 26
+          },
+          "hair": {
+            "precision": 0.103,
+            "recall": 0.533,
+            "f1": 0.173,
+            "n_true": 60
+          },
+          "eye": {
+            "precision": 0.03,
+            "recall": 1.0,
+            "f1": 0.058,
+            "n_true": 3
+          },
+          "nose": {
+            "precision": 0.016,
+            "recall": 1.0,
+            "f1": 0.031,
+            "n_true": 2
+          },
+          "mouth": {
+            "precision": 0.078,
+            "recall": 0.75,
+            "f1": 0.141,
+            "n_true": 8
+          },
+          "ear": {
+            "precision": 0.088,
+            "recall": 1.0,
+            "f1": 0.162,
+            "n_true": 3
+          },
+          "arm": {
+            "precision": 0.035,
+            "recall": 0.377,
+            "f1": 0.064,
+            "n_true": 53
+          },
+          "hand": {
+            "precision": 0.149,
+            "recall": 0.667,
+            "f1": 0.244,
+            "n_true": 36
+          },
+          "leg": {
+            "precision": 0.039,
+            "recall": 0.567,
+            "f1": 0.072,
+            "n_true": 30
+          },
+          "foot": {
+            "precision": 0.105,
+            "recall": 0.381,
+            "f1": 0.165,
+            "n_true": 21
+          }
+        },
+        "mean_f1": 0.148,
+        "non_elements_accepted_as_body_part": 0.547,
+        "clothing_and_accessories_called": {
+          "person": 266,
+          "arm": 172,
+          "leg": 141,
+          "hair": 98,
+          "head": 79,
+          "face": 53
+        }
+      },
+      "nonhuman": {
+        "n": 703,
+        "routed_to_people": 0.024,
+        "accepted_as_people": 0.014
+      }
+    },
+    "C": {
+      "gt": {
+        "n": 3407,
+        "domain_is_people": 0.9548,
+        "region_correct": 0.7502,
+        "part_ranked_first_by_router": 0.494,
+        "part_among_kept_candidates": 0.8421,
+        "accuracy_forced": 0.4931,
+        "accuracy_with_gates": 0.4881,
+        "unknown_rate": 0.0103,
+        "errors_anatomically_adjacent": 0.6393,
+        "errors_outside_people": 0.0892,
+        "per_part_accuracy_forced": {
+          "person": 0.4,
+          "head": 0.273,
+          "face": 0.532,
+          "hair": 0.522,
+          "eye": 0.877,
+          "nose": 0.841,
+          "mouth": 0.8,
+          "ear": 0.685,
+          "arm": 0.301,
+          "hand": 0.693,
+          "leg": 0.47,
+          "foot": 0.459
+        },
+        "top_confusions": {
+          "head -> hair": 125,
+          "head -> face": 123,
+          "person -> hair": 114,
+          "person -> head": 111,
+          "arm -> hand": 90,
+          "person -> face": 77,
+          "face -> head": 73,
+          "person -> leg": 67,
+          "hair -> head": 66,
+          "arm -> leg": 63,
+          "person -> arm": 46,
+          "leg -> arm": 39
+        }
+      },
+      "proposals": {
+        "n": 4189,
+        "per_part": {
+          "person": {
+            "precision": 0.393,
+            "recall": 0.446,
+            "f1": 0.418,
+            "n_true": 643
+          },
+          "head": {
+            "precision": 0.055,
+            "recall": 0.333,
+            "f1": 0.095,
+            "n_true": 48
+          },
+          "face": {
+            "precision": 0.059,
+            "recall": 0.346,
+            "f1": 0.101,
+            "n_true": 26
+          },
+          "hair": {
+            "precision": 0.127,
+            "recall": 0.683,
+            "f1": 0.215,
+            "n_true": 60
+          },
+          "eye": {
+            "precision": 0.017,
+            "recall": 1.0,
+            "f1": 0.033,
+            "n_true": 3
+          },
+          "nose": {
+            "precision": 0.013,
+            "recall": 1.0,
+            "f1": 0.026,
+            "n_true": 2
+          },
+          "mouth": {
+            "precision": 0.074,
+            "recall": 0.875,
+            "f1": 0.137,
+            "n_true": 8
+          },
+          "ear": {
+            "precision": 0.058,
+            "recall": 1.0,
+            "f1": 0.109,
+            "n_true": 3
+          },
+          "arm": {
+            "precision": 0.018,
+            "recall": 0.189,
+            "f1": 0.034,
+            "n_true": 53
+          },
+          "hand": {
+            "precision": 0.085,
+            "recall": 0.556,
+            "f1": 0.147,
+            "n_true": 36
+          },
+          "leg": {
+            "precision": 0.032,
+            "recall": 0.5,
+            "f1": 0.06,
+            "n_true": 30
+          },
+          "foot": {
+            "precision": 0.13,
+            "recall": 0.476,
+            "f1": 0.204,
+            "n_true": 21
+          }
+        },
+        "mean_f1": 0.132,
+        "non_elements_accepted_as_body_part": 0.665,
+        "clothing_and_accessories_called": {
+          "person": 261,
+          "arm": 150,
+          "leg": 140,
+          "hair": 121,
+          "head": 101,
+          "face": 56
+        }
+      },
+      "nonhuman": {
+        "n": 703,
+        "routed_to_people": 0.033,
+        "accepted_as_people": 0.013
+      }
+    }
+  },
+  "reject_margins": {
+    "person": -0.01986706256866455,
+    "head": 0.0036922097206115723,
+    "face": 0.08773404359817505,
+    "hair": 0.05192887783050537,
+    "eye": null,
+    "nose": null,
+    "mouth": 0.09652853012084961,
+    "ear": null,
+    "arm": 0.02200484275817871,
+    "hand": 0.03770822286605835,
+    "leg": 0.028823256492614746,
+    "foot": 0.10564398765563965
+  },
+  "flat_routing_C": {
+    "gt": {
+      "n": 3407,
+      "domain_is_people": 0.0,
+      "region_correct": null,
+      "part_ranked_first_by_router": 0.5019,
+      "part_among_kept_candidates": 0.828,
+      "accuracy_forced": 0.5045,
+      "accuracy_with_gates": 0.5019,
+      "unknown_rate": 0.0065,
+      "errors_anatomically_adjacent": 0.6635,
+      "errors_outside_people": 0.0403,
+      "per_part_accuracy_forced": {
+        "person": 0.392,
+        "head": 0.286,
+        "face": 0.554,
+        "hair": 0.539,
+        "eye": 0.888,
+        "nose": 0.856,
+        "mouth": 0.808,
+        "ear": 0.699,
+        "arm": 0.335,
+        "hand": 0.712,
+        "leg": 0.486,
+        "foot": 0.432
+      },
+      "top_confusions": {
+        "head -> face": 124,
+        "head -> hair": 124,
+        "person -> head": 118,
+        "person -> hair": 110,
+        "arm -> hand": 93,
+        "person -> leg": 80,
+        "person -> face": 73,
+        "arm -> leg": 73,
+        "face -> head": 67,
+        "hair -> head": 66,
+        "person -> arm": 58,
+        "leg -> arm": 41
+      }
+    },
+    "proposals": {
+      "n": 4189,
+      "per_part": {
+        "person": {
+          "precision": 0.405,
+          "recall": 0.459,
+          "f1": 0.43,
+          "n_true": 643
+        },
+        "head": {
+          "precision": 0.055,
+          "recall": 0.354,
+          "f1": 0.096,
+          "n_true": 48
+        },
+        "face": {
+          "precision": 0.061,
+          "recall": 0.346,
+          "f1": 0.103,
+          "n_true": 26
+        },
+        "hair": {
+          "precision": 0.131,
+          "recall": 0.7,
+          "f1": 0.221,
+          "n_true": 60
+        },
+        "eye": {
+          "precision": 0.016,
+          "recall": 1.0,
+          "f1": 0.032,
+          "n_true": 3
+        },
+        "nose": {
+          "precision": 0.013,
+          "recall": 1.0,
+          "f1": 0.026,
+          "n_true": 2
+        },
+        "mouth": {
+          "precision": 0.085,
+          "recall": 0.875,
+          "f1": 0.156,
+          "n_true": 8
+        },
+        "ear": {
+          "precision": 0.054,
+          "recall": 1.0,
+          "f1": 0.102,
+          "n_true": 3
+        },
+        "arm": {
+          "precision": 0.019,
+          "recall": 0.208,
+          "f1": 0.034,
+          "n_true": 53
+        },
+        "hand": {
+          "precision": 0.083,
+          "recall": 0.583,
+          "f1": 0.145,
+          "n_true": 36
+        },
+        "leg": {
+          "precision": 0.028,
+          "recall": 0.5,
+          "f1": 0.053,
+          "n_true": 30
+        },
+        "foot": {
+          "precision": 0.131,
+          "recall": 0.524,
+          "f1": 0.21,
+          "n_true": 21
+        }
+      },
+      "mean_f1": 0.134,
+      "non_elements_accepted_as_body_part": 0.71,
+      "clothing_and_accessories_called": {
+        "person": 258,
+        "leg": 155,
+        "arm": 154,
+        "hair": 120,
+        "head": 109,
+        "face": 55
+      }
+    },
+    "nonhuman": {
+      "n": 703,
+      "routed_to_people": 0.0,
+      "accepted_as_people": 0.016
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "n_queries": 19400,
+  "n_leaves": 19,
+  "n_entries": 13395,
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "agreement_cpu": 1.0,
+  "agreement_cuda": 1.0,
+  "single_query_numpy_ms": 0.2559779620005429,
+  "batched_engine": {
+    "cpu_batch_1": {
+      "ms_per_query": 1.3340313442373741,
+      "queries_per_s": 749.6075743045379
+    },
+    "cpu_batch_64": {
+      "ms_per_query": 0.09016912451009773,
+      "queries_per_s": 11090.270704447323
+    },
+    "cpu_batch_1024": {
+      "ms_per_query": 0.06888127197335336,
+      "queries_per_s": 14517.734230965549
+    },
+    "cpu_batch_19400": {
+      "ms_per_query": 0.06934537628863442,
+      "queries_per_s": 14420.572120594263
+    },
+    "cuda_batch_1": {
+      "ms_per_query": 0.8737711948239024,
+      "queries_per_s": 1144.4643699905184
+    },
+    "cuda_batch_64": {
+      "ms_per_query": 0.01607770703060396,
+      "queries_per_s": 62197.92400100942
+    },
+    "cuda_batch_1024": {
+      "ms_per_query": 0.005949327148258021,
+      "queries_per_s": 168086.23480939397
+    },
+    "cuda_batch_19400": {
+      "ms_per_query": 0.005468753608192387,
+      "queries_per_s": 182857.0222110509
+    }
+  },
+  "plug_out_plus_gpu_repack_ms": 26.518957001826493,
+  "encoder": {
+    "fp32": {
+      "images_per_s": 332.72086374050735
+    },
+    "fp16": {
+      "images_per_s": 425.740628097086
+    },
+    "fp16_vs_fp32_cosine_min": 0.9999570846557617,
+    "fp16_same_decision_as_fp32": 1.0,
+    "cpu_preprocess_images_per_s": 554.5946399802069
+  }
+}

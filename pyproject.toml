@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mosaic"
+version = "0.1.0"
+description = "Modular Object-agnostic Semantic Architecture with Indexed Concepts"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.26"]
+
+[project.scripts]
+mosaic-mcp = "mosaic.server:main"
+
+[project.optional-dependencies]
+clip = ["torch", "open_clip_torch", "pillow"]
+vision = ["torch", "torchvision", "open_clip_torch", "pillow", "transformers"]
+mcp = ["mcp>=2"]
+faiss = ["faiss-cpu"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
