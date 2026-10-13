@@ -1,119 +1,82 @@
 #!/usr/bin/env python3
-"""Find every object in an image (without knowing what they are) and match each one.
+"""See what the MCP tools would tell a reasoning model about an image, from the terminal.
 
-    python mosaic_cli.py test.jpg [more.jpg ...] [--k 5]
-    python mosaic_cli.py test.jpg --save out.jpg           # draw masks, boxes and labels
-    python mosaic_cli.py test.jpg --regions objects        # box crops instead of masks
-    python mosaic_cli.py test.jpg --without fruits/apple   # plug a module out for this run
-    python mosaic_cli.py --tree                            # show the module tree
+    python mosaic_cli.py photo.jpg                        # objects, identities, skeletons and pose facts
+    python mosaic_cli.py photo.jpg --save out.png         # draw masks, boxes and labels (for you, not the model)
+    python mosaic_cli.py photo.jpg --rule "angle(left_hip, left_knee, left_ankle)"   # measure on each person
+    python mosaic_cli.py photo.jpg --without people/face_region   # plug a group out for this run
+    python mosaic_cli.py --tree                           # the module tree
 """
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from PIL import Image, ImageDraw  # noqa: E402
-
-from mosaic import Mosaic  # noqa: E402
-from mosaic.encoder import ClipEncoder  # noqa: E402
-
-TOP_K = [1, 3]  # domains kept at L1, classes kept at L2
-DEFAULT_ROUTE_THRESHOLD = 0.5  # overridden by <modules>/registry.json, then results/results_<regions>.json
+from mosaic.capability import VisionSession  # noqa: E402
 
 
-def calibrated_route_threshold(regions: str, modules: Path) -> float:
-    for f in (modules / "registry.json", ROOT / "results" / f"results_{regions}.json"):
-        if f.exists():
-            return json.loads(f.read_text()).get("route_threshold", DEFAULT_ROUTE_THRESHOLD)
-    return DEFAULT_ROUTE_THRESHOLD
-
-
-def print_tree(system: Mosaic) -> None:
-    reg = system.registry
-    for group in reg.children():
-        print(group)
-        for child in reg.children(group):
-            m = reg.get(child)
-            print(f"  └ {child.split('/')[-1]:<14} {len(m)} entries, accepts >= {m.accept_threshold:.3f}")
-
-
-def explain(system: Mosaic, pred, route_t: float) -> str:
-    if pred.reason == "router":
-        return f"UNKNOWN (no domain scores above {route_t:.3f})"
-    if pred.reason == "leaf_threshold":
-        threshold = system.registry.get(pred.module).accept_threshold
-        return f"UNKNOWN (closest is {pred.module} at {pred.nearest:.3f}; it accepts >= {threshold:.3f})"
-    return f"{pred.module}  (similarity {pred.nearest:.3f}, {pred.votes}/{len(pred.matches)} neighbours agree)"
+def print_tree(session: VisionSession, node: dict | None = None, depth: int = 0) -> None:
+    for child in (node or session.list_modules())["children"]:
+        if "group" in child:
+            print("  " * depth + child["group"] + "/")
+            print_tree(session, child, depth + 1)
+        else:
+            m = session.mosaic.registry.get(child["module"])
+            extra = f", part of {m.part_of}" if m.part_of else ""
+            print("  " * depth + f"{child['module'].rsplit('/', 1)[-1]:<10} {child['examples']} examples, "
+                  f"accepts >= {m.accept_threshold:.3f}{extra}")
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Detect objects and match each against the MOSAIC module tree.")
-    ap.add_argument("images", nargs="*", type=Path, help="image file(s) to check")
-    ap.add_argument("-i", "--image", dest="extra", action="append", type=Path, default=[],
-                    help="image file (alternative to the positional form)")
-    ap.add_argument("--k", type=int, default=5, help="nearest neighbours to vote over")
-    ap.add_argument("--route-threshold", type=float, default=None, help="min domain score to consider an object")
-    ap.add_argument("--min-objectness", type=float, default=0.1, help="detector confidence cut-off")
-    ap.add_argument("--no-leaf-gate", action="store_true", help="never answer UNKNOWN at the class level")
-    ap.add_argument("--without", action="append", default=[], metavar="MODULE",
-                    help="plug out a class (fruits/apple) or domain (fruits) for this run")
+    ap = argparse.ArgumentParser(description="Objects, identities and pose facts for an image, as the MCP tools see them.")
+    ap.add_argument("images", nargs="*", type=Path)
+    ap.add_argument("--modules", type=Path, default=ROOT / "modules_people")
+    ap.add_argument("--taught", type=Path, default=ROOT / "taught", help="modules and rules taught in MCP sessions")
+    ap.add_argument("--without", action="append", default=[], metavar="MODULE", help="plug out a module or group")
+    ap.add_argument("--rule", action="append", default=[], metavar="EXPR", help="geometry expression to measure")
     ap.add_argument("--save", type=Path, help="write an annotated copy of the (last) image here")
     ap.add_argument("--tree", action="store_true", help="print the module tree")
-    ap.add_argument("--regions", choices=["masks", "objects"], default="masks",
-                    help="masks: SAM cut-outs (default); objects: box crops")
-    ap.add_argument("--modules", type=Path, default=None, help="default: modules_<regions>/")
     args = ap.parse_args()
-    args.images += args.extra
     if not args.images and not args.tree:
-        ap.error("give an image, e.g.  python mosaic_cli.py test.jpg   or   python mosaic_cli.py --image test.jpg")
+        ap.error("give an image, or --tree")
+    if not (args.modules / "registry.json").exists():
+        sys.exit(f"no modules in {args.modules}; run scripts/build_people.py first")
 
-    from mosaic.detector import ObjectnessDetector
-
-    modules = args.modules or ROOT / f"modules_{args.regions}"
-    route_t = args.route_threshold if args.route_threshold is not None else calibrated_route_threshold(args.regions, modules)
-    segmenter = None
-    if args.regions == "masks":
-        from mosaic.segmenter import BoxSegmenter
-
-        segmenter = BoxSegmenter()
-    system = Mosaic(ClipEncoder(fp16=True), detector=ObjectnessDetector(min_score=args.min_objectness),
-                    segmenter=segmenter, top_k_modules=TOP_K, route_threshold=route_t,
-                    leaf_gate=not args.no_leaf_gate)
-    if not system.registry.load_dir(modules):
-        sys.exit(f"no modules found in {modules}; run scripts/run_experiment.py --regions {args.regions} first")
+    session = VisionSession(args.modules, taught_dir=args.taught)
     for name in args.without:
-        print(f"plugged out: {', '.join(system.detach(name))}")
+        print("plugged out:", ", ".join(session.forget(name).get("removed", [])))
     if args.tree:
-        print_tree(system)
+        print_tree(session)
 
     for path in args.images:
         if not path.exists():
             print(f"\n{path}: file not found")
             continue
-        image = Image.open(path).convert("RGB")
-        results = system.recognize(image, k=args.k)
-        print(f"\n{path}: {len(results)} object(s)" + (" (none detected; used whole image)" if results[0][0].fallback else ""))
-        for n, (region, pred) in enumerate(results, start=1):
-            shape = f"mask {region.area * 100:.0f}% of image" if region.mask is not None else f"box {region.box}"
-            print(f"  #{n} {shape}  objectness {region.objectness:.2f}")
-            print(f"     -> {explain(system, pred, route_t)}")
-
+        iid = session.load_image(str(path))["image_id"]
+        objects = session.find_objects(iid)["objects"]
+        print(f"\n{path}: {len(objects)} object(s)")
+        for o in objects:
+            r = session.identify(o["object_id"])
+            geo = r.get("geometry") or {}
+            what = r["module"] if r["known"] else f"unknown ({r['reason']})"
+            note = f"  [skeleton changed it from {geo['appearance_alone_said']}]" if geo.get("changed") else ""
+            print(f"  {o['object_id']:<7} {str(o['box']):<24} {what}  sim {r['similarity']}{note}")
+        for p in session.pose(iid)["people"]:
+            facts = p["facts"]
+            print(f"  {p['person_id']} (object {p['object_id']}): {len(p['joints'])} joints seen")
+            for k, v in facts.items():
+                if v is True or (not isinstance(v, bool) and v != "none"):
+                    print(f"     {k:<26} {v}")
+            if p["constraints_broken"]:
+                print(f"     implausible: {', '.join(p['constraints_broken'])}")
+            for expr in args.rule:
+                m = session.measure(p["person_id"], expr)
+                print(f"     {expr} = {m['value']}" + (f"  (not seen: {', '.join(m['missing'])})" if m["missing"] else ""))
         if args.save:
-            for region, pred in results:  # tint each mask: green = known, grey = unknown
-                if region.mask is not None:
-                    tint = Image.new("RGB", image.size, (40, 200, 60) if pred.known else (160, 160, 160))
-                    alpha = Image.fromarray((region.mask * 90).astype("uint8"))
-                    image = Image.composite(tint, image, alpha)
-            draw = ImageDraw.Draw(image)
-            for n, (region, pred) in enumerate(results, start=1):
-                colour = (40, 200, 60) if pred.known else (160, 160, 160)
-                draw.rectangle(region.box, outline=colour, width=2)
-                draw.text((region.box[0] + 4, region.box[1] + 2), f"#{n} {pred.label or 'unknown'}", fill=colour)
-            image.save(args.save)
+            args.save.write_bytes(session.render(iid))
             print(f"  saved {args.save}")
 
 

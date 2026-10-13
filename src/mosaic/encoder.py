@@ -30,7 +30,7 @@ class Encoder(Protocol):
 
 
 class ClipEncoder:
-    """Frozen OpenCLIP encoder. Requires the `clip` extra."""
+    """Frozen OpenCLIP encoder (CLIP or SigLIP towers). Requires the `clip` extra."""
 
     def __init__(
         self,
@@ -38,21 +38,26 @@ class ClipEncoder:
         pretrained: str = "laion2b_s34b_b79k",
         device: str | None = None,
         fp16: bool = False,
+        text_device: str | None = None,
     ):
-        """fp16=True runs the image/text towers under CUDA autocast: ~1.3x faster on GPU,
-        and embeddings stay within cosine 0.9999 of fp32, so fp32-built modules still apply."""
+        """fp16=True stores the image tower in fp16 and runs it under CUDA autocast: half the memory, ~1.3x
+        faster, and embeddings stay within cosine 0.999 of fp32, so fp32-built modules still apply.
+        text_device: where the text tower lives (default: the image tower's device, or the CPU with fp16, since
+        text queries are rare and SigLIP SO400M's text tower alone is 1.8 GB in fp32)."""
         import open_clip
         import torch
 
         self._torch = torch
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.fp16 = fp16 and self.device.startswith("cuda")
-        self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            model_name, pretrained=pretrained, device=self.device
-        )
-        self.model.eval().requires_grad_(False)
+        self.text_device = text_device or ("cpu" if self.fp16 else self.device)
+        self.model, _, self.preprocess = open_clip.create_model_and_transforms(model_name, pretrained=pretrained)
+        self.model.eval().requires_grad_(False).to(self.text_device)  # everything but the image tower is text
+        self.model.visual.to(self.device, torch.float16 if self.fp16 else torch.float32)
         self.tokenizer = open_clip.get_tokenizer(model_name)
         self.encoder_id = f"open_clip/{model_name}/{pretrained}"
+        bias = getattr(self.model, "logit_bias", None)  # SigLIP is trained with a sigmoid: a real probability
+        self._logit = (float(self.model.logit_scale.exp()), float(bias)) if bias is not None else None
         from PIL import Image
 
         self.dim = int(self.embed_images([Image.new("RGB", (32, 32))]).shape[1])  # works for any tower type
@@ -66,9 +71,17 @@ class ClipEncoder:
             out = self.model.encode_image(batch)
         return normalize(out.float().cpu().numpy())
 
+    def text_match_probability(self, similarity: np.ndarray) -> np.ndarray | None:
+        """P(image matches text) from a cosine similarity (SigLIP only; None for softmax-trained CLIP)."""
+        if self._logit is None:
+            return None
+        scale, bias = self._logit
+        return 1.0 / (1.0 + np.exp(-(scale * np.asarray(similarity) + bias)))
+
     def embed_texts(self, texts: Sequence[str]) -> np.ndarray:
-        tokens = self.tokenizer(list(texts)).to(self.device)
-        with self._torch.no_grad(), self._autocast():
+        tokens = self.tokenizer(list(texts)).to(self.text_device)
+        with self._torch.no_grad(), self._torch.autocast("cuda", dtype=self._torch.float16,
+                                                         enabled=self.fp16 and self.text_device.startswith("cuda")):
             out = self.model.encode_text(tokens)
         return normalize(out.float().cpu().numpy())
 
@@ -100,3 +113,8 @@ class DinoEncoder:
 
     def embed_texts(self, texts: Sequence[str]) -> np.ndarray:
         raise NotImplementedError("DINOv2 has no text encoder")
+
+
+def siglip(device: str | None = None) -> ClipEncoder:
+    """The default encoder: SigLIP SO400M/14 (best on body parts, experiment 7)."""
+    return ClipEncoder("ViT-SO400M-14-SigLIP", "webli", device=device, fp16=True)

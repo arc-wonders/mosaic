@@ -11,3 +11,5 @@ results/*.png
 results/*.jpg
 results/*.log
 results/sweep/*.log
+# modules and rules taught in MCP sessions (user data)
+taught/

@@ -41,6 +41,7 @@ class KnowledgeModule:
     part_of: str | None = None  # e.g. "people/person" for a hand; lets a reasoning model walk whole -> parts
     reject_margin: float | None = None  # with "negative" entries: accept only if nearest positive beats
     #                                     the nearest negative by at least this much
+    geometry: dict | None = None  # anatomical signature (mosaic.geometry.fit_signature) for body parts
     version: str = "0.1.0"
     description: str = ""
     created: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
@@ -119,6 +120,14 @@ class KnowledgeModule:
             return -np.inf
         return float((self.embeddings[mask] @ normalize(query)).max())
 
+    def accepts(self, query: np.ndarray, nearest: float | None = None) -> bool:
+        """This leaf's own gates: typical enough of its examples, and (with counter-examples) closer to them
+        than to what it is not by reject_margin. `nearest`: the query's best image similarity, if known."""
+        nearest = self.nearest(query) if nearest is None else nearest
+        if self.accept_threshold is not None and nearest < self.accept_threshold:
+            return False
+        return self.reject_margin is None or nearest - self.nearest(query, "negative") >= self.reject_margin
+
     def set_accept_percentile(self, percentile: float) -> None:
         """Accept queries at least as typical as this percentile of the module's own members."""
         if len(self._leave_one_out):
@@ -150,6 +159,7 @@ class KnowledgeModule:
             "accept_percentile": self.accept_percentile,
             "part_of": self.part_of,
             "reject_margin": self.reject_margin,
+            "geometry": self.geometry,
             "created": self.created,
         }
         (path / "manifest.json").write_text(json.dumps(manifest, indent=2))
@@ -176,6 +186,7 @@ class KnowledgeModule:
             accept_percentile=manifest.get("accept_percentile"),
             part_of=manifest.get("part_of"),
             reject_margin=manifest.get("reject_margin"),
+            geometry=manifest.get("geometry"),
             version=manifest.get("version", "0.1.0"),
             description=manifest.get("description", ""),
             created=manifest.get("created", ""),

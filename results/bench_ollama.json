@@ -1,0 +1,64 @@
+{
+  "status": "partial: vlm 100/100, script 96/100 (locate 21/25), slm not run; stopped by user 2026-09-28",
+  "models": {
+    "slm": "qwen2.5:7b-instruct",
+    "vlm": "qwen2.5vl:7b",
+    "script": "MOSAIC, fixed policy, no LLM"
+  },
+  "n_per_task": 25,
+  "seed": 0,
+  "script": {
+    "count": {
+      "n": 25,
+      "accuracy": 0.32,
+      "unparsed": 0,
+      "mean_seconds": 1.0,
+      "mean_tool_calls": 0.0,
+      "mean_abs_error": 1.16
+    },
+    "locate": {
+      "n": 21,
+      "accuracy": 0.0,
+      "unparsed": 0,
+      "mean_seconds": 7.8,
+      "mean_tool_calls": 0.0,
+      "mean_best_iou": 0.159
+    },
+    "presence": {
+      "n": 50,
+      "accuracy": 0.92,
+      "unparsed": 0,
+      "mean_seconds": 0.9,
+      "mean_tool_calls": 0.0,
+      "acc_truth_yes": 0.96,
+      "acc_truth_no": 0.88
+    }
+  },
+  "vlm": {
+    "count": {
+      "n": 25,
+      "accuracy": 0.48,
+      "unparsed": 0,
+      "mean_seconds": 2.0,
+      "mean_tool_calls": 1.0,
+      "mean_abs_error": 0.96
+    },
+    "locate": {
+      "n": 25,
+      "accuracy": 0.2,
+      "unparsed": 0,
+      "mean_seconds": 1.7,
+      "mean_tool_calls": 1.0,
+      "mean_best_iou": 0.353
+    },
+    "presence": {
+      "n": 50,
+      "accuracy": 0.94,
+      "unparsed": 1,
+      "mean_seconds": 2.2,
+      "mean_tool_calls": 1.0,
+      "acc_truth_yes": 0.92,
+      "acc_truth_no": 0.96
+    }
+  }
+}

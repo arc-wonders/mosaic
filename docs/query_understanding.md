@@ -1,8 +1,11 @@
 # Query understanding and compositional concepts (design, not built)
 
-Status: **design note only.** Right now MOSAIC is being built as the routing part:
-image → objects → the **basic element** each object is (`people/arm`, `handheld/phone`, …).
-Query understanding and reasoning described here come later.
+Status: **design note, partly superseded.** The project is now one domain (people) served to a text-only
+LLM over MCP (see the README). The LLM itself does the query understanding: it parses the question and
+calls the tools. The geometric half of the "simple checks" below is built as the rule language in
+`mosaic/geometry.py` (`pose`, `measure`, `define_rule`). Attribute checks (colour, count) and a
+`clothing/` group are not built yet. Examples below that use `handheld/` or `animals/` refer to domains
+that have since been dropped; objects like these are now `teach`-able in a session.
 
 ## Principle: basic elements, not "final boss" modules
 

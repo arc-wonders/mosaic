@@ -2,313 +2,229 @@
 
 **M**odular **O**bject-agnostic **S**emantic **A**rchitecture with **I**ndexed **C**oncepts.
 
-A vision system where a frozen, category-free encoder does the *seeing*, and
-all knowledge of *what things are* lives in external, attachable **modules**
-(the tiles of the mosaic). A router picks which tiles to consult per query.
+MOSAIC gives a **text-only LLM** sight without giving it pixels. It runs as an **MCP server**: the model
+calls tools (find objects, identify, pose, measure, teach, forget, explain), gets back structured facts it can
+check (names, boxes, similarities, joint angles), and does all the reasoning itself. No vision-language model is
+in the loop. The domain is **people**: the person, the body parts, and the body's geometry.
 
-Term paper: *Modular Object-Agnostic Vision Architecture Using Embedding-Based
-Semantic Routing* — see `../synopsis/`.
+Term paper: *Modular Object-Agnostic Vision Architecture Using Embedding-Based Semantic Routing* (see `../synopsis/`).
+
+## Why not just use a VLM?
+
+A VLM compresses an image into a caption-like answer inside its weights. MOSAIC keeps perception outside the
+model, in parts you can inspect, calibrate and swap. That makes some things possible that a VLM can't do:
+
+| | A VLM | LLM + MOSAIC | Status |
+|---|---|---|---|
+| **Learn a new visual concept in a conversation** ("that's my mug") and keep it | Its weights are frozen; it forgets when the context ends | `teach` builds a module from objects in the session. It's recognised on the next call and saved | built |
+| **Forget on demand** (privacy, a wrong concept) | It can't unlearn | `forget` plugs the module out and deletes it. Removal is exact, and nothing of it remains | built |
+| **Say "I don't know"** | It hallucinates with confidence | Each module's own gate (calibrated on its own examples) answers *unknown*, and says which module came closest and by how much | built |
+| **Show its evidence** | No provenance | `explain` returns the routing scores, the gate, and the stored examples (source photo + box) behind an answer | built |
+| **Exact body geometry** (angles, directions, which way the elbow turns) | Can't measure pixels | A skeleton plus geometry rules: values like `left_elbow_angle = 92°`, computed, not guessed | built |
+| **New geometric concepts without training** | Needs fine-tuning | `define_rule("waving", "...")`: the LLM names a concept once, and it's evaluated on every person from then on | built |
+| **Small details** | The input is downsampled | `find_objects(region=…)` zooms into a region before detecting | built |
+| **Privacy / cost** | The image goes to the model provider | Images stay local; only text reaches the LLM | built |
+| **Reason over thousands of photos** ("every photo where she's sitting") | Limited by its context window | Index a collection once, then query it | planned |
+
+The claim to test in the paper is a benchmark of **LLM + MOSAIC vs. a frontier VLM**, with one task group per
+row above (see the roadmap).
 
 ## Architecture
 
 ```
-image ─► Detector (class-agnostic objectness: finds "things", knows no labels)
-           │   box #1        box #2        box #3 ...
-           ▼
-         Encoder (frozen) ─► one embedding per object crop
-                                         │   (each object goes through the rest independently)
-             ┌───────────── Router: coarse → fine over the module tree ─────────────┐
-             │ L1  animals   birds   vehicles   [fruits]   ← best domain (ABSTAIN if  │
-             │                                     │         below route threshold) │
-             │ L2          apple  orange  banana  pineapple  strawberry             │
-             │             [top-3 class leaves kept]                                │
-             └──────────────────────────────────────────────────────────────────────┘
-                                         │
-             Matcher: 5-NN vote over the kept leaves' stored examples
-                                         │
-             Leaf gate: the winning leaf's own accept threshold (ABSTAIN if the
-             nearest example is less typical than the leaf's own members)
-                                         │
-                              #1 fruits/apple   #2 unknown   ...
+image ─► Detector (OWLv2 objectness + box heads only: finds "things", knows no labels)
+           │  box #1   box #2   ...                       ┌──────────────────────────────────────┐
+           ├──► SAM mask ─► soft cut-out ─► Encoder ──────► Router: people ─► face_region / limbs  │
+           │                              (SigLIP SO400M,  │   ─► top-3 parts ─► 5-NN vote ─►     │
+           │                               frozen)         │   leaf gate (known / unknown)        │
+           │                                               └────────────────┬─────────────────────┘
+           └──► person boxes ─► Skeleton (ViTPose, 17 joints) ──┐           │
+                                                                ├─► geometry: which joints fall in each
+                                                                │   part's box re-ranks look-alike parts
+                                                                │   (head vs face, arm vs hand)
+                                                                └─► rules: named expressions over joints
+                                                                    (angles, directions, sitting, facing ...)
+                   ▲
+   text-only LLM ──┘  MCP tools: find_objects, identify, pose, measure, define_rule, teach, forget, explain ...
 ```
 
-**Everything is object-level.** A query image is split into objects by a detector
-that has no label set: OWLv2's vision tower, objectness head and box head, with no text
-tower or class head. Modules store **only object embeddings**. When a module is built
-from example images, each image's labelled object is the one the set has in common
-(**consensus selection** in `builder.py`). That way, a teddy bear in one cat photo isn't
-stored as "cat", even when it is the most object-like thing in that photo. The selection leans
-toward whole objects, so a module doesn't fill up with wheels and headlights. Objects
-under 64 px on a side are ignored, because they are too blurry to recognise. The image's
-overall answer is the known label that covers the most image area (`Mosaic.main_label`).
+- **Nothing here has a label set except the registry.** The detector, SAM and the pose model are frozen
+  class-agnostic sensors. What things *are* lives only in the modules, and what poses *mean* lives only in the rules.
+- **Modules** are plug-in leaves (`people/limbs/hand`) under groups (`people/limbs`). Each stores object
+  embeddings with provenance, its own accept gate, `part_of` (hand → arm → person), and an **anatomical
+  signature**. The signature records where the part sits on a skeleton (which joints its box holds, its size,
+  its height on the person) and is fitted on the module's own examples, so it travels with the module.
+- **Rules** are data (`src/mosaic/people_rules.json`, plus rules taught in sessions), not code.
+- The contract between components is unchanged: every vector is an L2-normalised `float32` from one `encoder_id`.
+  A module built with another encoder is a hard error.
 
-**Leaves** are plug-in modules, one per class (`fruits/apple`). **Groups** (`fruits`)
-hold no data. A group's routing descriptors summarise its children, and they are
-recomputed whenever a child is plugged in or out. You can plug out one class
-(`detach("fruits/apple")`) or a whole domain (`detach("fruits")`). The tree can be any
-depth, and a module named without `/` is a top-level leaf.
+| Component | File | Responsibility |
+|---|---|---|
+| Detector | `detector.py` | class-agnostic boxes + objectness |
+| Segmenter | `segmenter.py` | box → mask (SAM) |
+| Encoder | `encoder.py` | frozen image/text embeddings (SigLIP SO400M by default; CLIP, DINOv2 also supported) |
+| Pose | `pose.py` | person box → 17 joints (ViTPose), in image pixels |
+| Geometry | `geometry.py` | skeletons, anatomical signatures, the rule language |
+| Module / Registry | `module.py`, `registry.py` | plug-in leaves and the tree; group descriptors summarise children |
+| Router / Matcher / Mosaic | `router.py`, `matcher.py`, `pipeline.py` | coarse-to-fine routing, k-NN, gates |
+| VisionSession | `capability.py` | the stateful tool layer: stable object ids, zoom, identify + geometry, pose, teach/forget, explain |
+| MCP server | `server.py` | exposes VisionSession as MCP tools |
+| BatchEngine | `engine.py` | the same pipeline as batched GPU tensor ops |
 
-The contract between components: **every vector is an L2-normalised `float32`
-of dimension `D`, produced by one specific `encoder_id`.**
+## MCP tools
 
-| Component   | File              | Responsibility |
-|-------------|-------------------|----------------|
-| Detector    | `detector.py`     | class-agnostic object boxes + objectness (OWLv2 heads, no text) |
-| Encoder     | `encoder.py`      | image/text → shared embedding space. Frozen. |
-| Perceiver   | `perceiver.py`    | image → detected objects → one embedding per crop |
-| Segmenter   | `segmenter.py`    | optional: SAM mask per detected box (class-agnostic); soft cut-out |
-| Builder     | `builder.py`      | picks each example image's labelled object by consensus |
-| Module      | `module.py`       | a leaf: entries, embeddings, routing descriptors, self-calibrated accept threshold |
-| Registry    | `registry.py`     | the plug-in tree; group summaries; enforces encoder compatibility |
-| Router      | `router.py`       | coarse-to-fine top-k per level (or flat, as a baseline) |
-| Matcher     | `matcher.py`      | NN search in routed leaves + composition across leaves |
-| Mosaic      | `pipeline.py`     | wires it together; `classify()` applies the gates |
-| BatchEngine | `engine.py`       | the same pipeline as batched GPU tensor ops; repacks on plug-in/out |
+| Tool | What it returns |
+|---|---|
+| `load_image(path)` | image id, size |
+| `find_objects(image_id, region?)` | class-agnostic objects with stable ids; a region is zoomed in first |
+| `identify(object_id \| image_id+box)` | module, known/unknown and why, similarity vs. the gate, top-3 candidates, `part_of`, and what the skeleton contributed |
+| `find_parts(object_id)` | objects inside an object, each identified |
+| `search(image_id, query, region?)` | objects matching a module path (with a window scan), or free text (SigLIP match probability) |
+| `relate(a, b)` | mask overlap, containment, touching, direction, distance |
+| `pose(image_id \| object_id)` | per person: joints, estimated hand positions, every rule evaluated (facts / broken constraints / unknown) |
+| `measure(person_id, expression)` | any geometry expression on one skeleton |
+| `define_rule(name, expression, …)` / `list_rules()` | add a named concept at run time / the vocabulary |
+| `teach(label, object_ids)` / `forget(name)` | plug a new module in from session objects / plug a module, group or rule out |
+| `explain(object_id)` | routing scores per level, gates, the stored examples it matched, the runner-up, the geometry |
+| `list_modules(path?)` | the tree |
 
-### Design decisions
+## Geometry rules
 
-1. **"Object-agnostic" encoder vs. text alignment.** Text queries need a shared
-   image–text space (CLIP/SigLIP). We use such an encoder frozen, and define
-   *object-agnostic* operationally: **the central model has no task heads or
-   label sets, and is never updated when concepts change.**
-2. **Hierarchy by path names.** Classes are plug-in leaves under domain groups.
-   A group summarises its children's descriptors, compressed to 16 with k-means.
-3. **Three decisions, three signals.** The router picks *where to look* from centroids.
-   k-NN picks *which class*. The **leaf gate** decides *whether it is known at all*.
-   Each leaf calibrates its own gate from its own images (the 5th percentile of
-   leave-one-out nearest-neighbour similarity), so it needs no shared data and
-   travels with the module.
-4. **Encoder–module drift is a hard error.** Manifests record `encoder_id` and `dim`.
-5. **Multi-centroid, per-modality descriptors.** Image and text entries each get
-   their own k-means centroids, because the two sit in different regions of CLIP space.
-
-### Module format (on disk)
+A rule is a named expression over joints (`left_shoulder`, `left_elbow`, `left_wrist`, …, plus derived `neck`,
+`mid_hip`, `left_hand`, `right_hand`). The body's "kinematic chain" reads naturally. For example, *"from the
+shoulder the upper arm goes down, then at the elbow the arm turns"*:
 
 ```
-modules/<domain>/<class>/
-  manifest.json     # name, version, description, encoder_id, dim, accept_threshold, accept_percentile,
-                    # part_of (e.g. hand -> people/limbs/arm), reject_margin (with negatives), created
-  embeddings.npy    # (N, D) float32, L2-normalised
-  entries.jsonl     # N lines: {"label", "kind": "image"|"text"|"negative", ...}
-<registry>/registry.json   # route_threshold (domain gate) and top_k, calibrated for the whole registry
-  descriptors.npy   # (K, D) float32 routing centroids
+left_upper_arm   direction(left_shoulder, left_elbow)                     -> "down"
+left_forearm     direction(left_elbow, left_wrist)                        -> "right"
+left_elbow_turn  turn(left_shoulder, left_elbow, left_wrist)              -> "left"   (bends left in the image)
+left_elbow_angle angle(left_shoulder, left_elbow, left_wrist)             -> 91.0
+left_arm_L       goes(left_shoulder, left_elbow, "down", 35) and between(left_elbow_angle, 60, 120)   -> true
 ```
+
+- **Functions:** `angle`, `heading`, `direction`, `goes(a, b, word, tol)`, `turn`, `toward`, `above`/`below`/
+  `left_of`/`right_of`, `dist` (in torso lengths), `px`, `x`/`y` (within the person box), `visible`,
+  `between`, `touches(point, obj_N)`, `inside(point, obj_N)`, plus `abs`, `min`, `max` and `round`.
+- **Rules can use other rules and objects:** `holding_phone = touches(right_hand, obj_7) and right_arm_L`.
+- **Three-valued logic:** a rule that needs a joint the skeleton couldn't see is *unknown*, and it reports the
+  missing joints. It is never silently false. An `or` that one visible side already decides is still answered.
+- **Two kinds of rule.** *Facts* are reported as values. *Constraints* are anatomy checks, such as upper arm vs.
+  forearm length, and they're reported only when they fail, which flags a skeleton that's probably wrong.
+- **Safety:** expressions are parsed, not `eval`ed. Only whitelisted syntax and functions are allowed.
+- **Coordinates:** directions are in the image frame (up = top of the image). `left_*` / `right_*` joints are
+  the person's own sides, so for someone facing the camera, their left arm is on the image right.
+
+49 rules ship by default: elbow and knee angles, arm directions, raised, hanging, L-shape, pointing and
+direction, hands up, hand near face, arms crossed, hands on hips, facing, torso upright or horizontal, sitting,
+standing, squatting, on all fours, arms spread, plus 7 anatomy constraints.
 
 ## Setup
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -e ".[dev]"          # core: numpy only
-.venv/bin/pip install -e ".[clip]"         # real encoder (torch + open_clip)
+.venv/bin/pip install -e ".[dev]"                 # core: numpy only
+.venv/bin/pip install -e ".[vision,mcp]"          # models (torch, open_clip, transformers) + MCP server
 .venv/bin/pytest
 ```
 
-## Usage
+Build the people domain (Open Images, 1,764 photos, 16.5k instances). Each step caches its output:
 
 ```bash
-python scripts/extract_objects.py                  # detect + embed all objects in data/raw
-python scripts/run_experiment.py                   # build object modules (modules/), evaluate
-python scripts/run_experiment.py --regions whole   # whole-image comparison (modules_whole/)
-python scripts/extract_masks.py                    # SAM masks for every box (+ soft cut-out embeddings)
-python scripts/run_experiment.py --regions masks   # mask-based modules (modules_masks/)
-python scripts/multi_object_test.py                # two-object collages, both pipelines
-python mosaic_cli.py image.png --save out.jpg          # detect + segment objects, classify each, draw masks
-python mosaic_cli.py image.png --regions objects       # box crops instead of masks
-python mosaic_cli.py image.png --without fruits/apple  # plug out one class for this run
-python mosaic_cli.py image.png --without fruits        # plug out a whole domain
-python mosaic_cli.py --tree                            # list groups, leaves, accept thresholds
+python scripts/fetch_human.py                                # photos + boxes -> data/human/
+python scripts/cache_human_crops.py                          # SAM soft-mask cut-out of every instance
+python scripts/compare_encoders.py --only siglip-so400m      # SigLIP embeddings of the cut-outs
+python scripts/extract_poses.py                              # ViTPose skeleton per annotated person
+python scripts/build_people.py                               # modules_people/ + results/people.json
+```
+
+(Run scripts from the repo root with `PYTHONPATH=scripts`.)
+
+## Usage
+
+Give an LLM the tools (Claude Code shown; any MCP client works):
+
+```bash
+claude mcp add mosaic -- /path/to/mosaic/.venv/bin/python -m mosaic.server
+# env: MOSAIC_MODULES (default modules_people), MOSAIC_TAUGHT (default ./taught: taught modules + rules)
+```
+
+See what the tools would report, from the terminal:
+
+```bash
+python mosaic_cli.py photo.jpg                             # objects, identities, skeletons, pose facts
+python mosaic_cli.py photo.jpg --rule "angle(left_hip, left_knee, left_ankle)"
+python mosaic_cli.py photo.jpg --save out.png              # annotated image, for you (the LLM never sees it)
+python mosaic_cli.py --tree
+PYTHONPATH=scripts python scripts/demo_reasoning.py photo.jpg   # a scripted loop: pose, then what's in each hand
 ```
 
 ```python
-system.attach(KnowledgeModule.build("fruits/mango", encoder.encoder_id, embs, entries))  # plug in
-system.detach("fruits/mango")                                                            # plug out
-pred = system.classify(query_embedding)   # pred.label, pred.module, pred.reason
-batch = system.classify_batch(Q, device="cuda")  # same decisions, batched on the GPU
-encoder = ClipEncoder(fp16=True)                 # ~1.3x faster encoding, same decisions
+from mosaic.capability import VisionSession
+s = VisionSession("modules_people", taught_dir="taught")
+img = s.load_image("photo.jpg")["image_id"]
+objs = s.find_objects(img)["objects"]
+s.identify(objs[0]["object_id"])            # module, known, candidates, geometry
+people = s.pose(img)["people"]              # joints + facts per person
+s.measure(people[0]["person_id"], "turn(left_shoulder, left_elbow, left_wrist)")
+s.define_rule("waving", "left_arm_raised and left_elbow_angle < 150")
+s.teach("my_mug", ["obj_5"]); s.forget("taught/my_mug")
 ```
 
 ## Results
 
-All experiments use frozen encoders; nothing is fine-tuned. The numbers below are from the runs
-described. Raw files are in `results/`. Experiments 1–2 were run before the scripts were generalised,
-and their JSON was overwritten by later runs, so their numbers are recorded here only.
+All encoders and sensors are frozen; nothing is fine-tuned. Raw numbers are in `results/`. Experiments 1–7
+(five domains, CLIP, the hierarchy, masks, the encoder comparison) are in
+[`docs/earlier_experiments.md`](docs/earlier_experiments.md).
 
-### Datasets
+### Experiment 8: the people domain on SigLIP, plus skeleton geometry (`results/people.json`)
 
-| Set | Classes | Source | Size |
-|---|---|---|---|
-| Objects | animals (cat, dog, elephant, zebra), birds (eagle, owl, parrot, flamingo, penguin), vehicles (sports car, pickup truck, school bus, scooter, airplane), fruits (apple, orange, banana, strawberry, pineapple) | cats_vs_dogs, ImageNet-1k, Fruits-360 (300/fruit) | 1,000 images/class, 700 build / 100 calibrate / 200 test |
-| OOD probes | lemon (near), pizza (far) | ImageNet-1k | 200 each |
-| People + handheld (v1) | person, face, hand, arm, leg; phone, bottle, cup, knife, ball, book | Human-Parts, Open Images, COCO | ≤500 instances/class, split by image 70/10/20 |
-| Human model | person, head, face, hair, eye, nose, mouth, ear, arm, hand, leg, foot | Open Images validation (all boxes kept) | 1,764 photos, 16.5k instances, split by image hash 70/10/20 |
+Open Images, same image-hash split as experiments 6–7 (70% build / 10% calibration / 20% test; 11,434 build
+and 3,407 test instances). There are 12 leaves. Accuracy is forced (no gates), so it's comparable to experiment 7.
+The geometry weight was chosen on the calibration split.
 
-### Experiment 1 — 4 classes, whole images, CLIP ViT-B/32
-
-| Metric | Result |
-|---|---|
-| Routing to the right module | 100% |
-| Accuracy: MOSAIC / flat kNN / zero-shot CLIP / linear probe | 98.5 / 98.5 / 98.5 / 99.25% |
-| Detach `fruits` → fruit images unknown | 100% (none mislabelled); identical predictions after re-attach |
-| Pizza / lemon refused | 95.5% / 2% |
-
-### Experiment 2 — 19 classes in 4 domains, whole images
-
-| Metric | Result |
-|---|---|
-| Routing to the right domain | 99.76% |
-| Accuracy: MOSAIC / flat kNN / zero-shot / linear probe | 98.68 / 98.76 / 98.63 / 99.08% |
-| Detach a domain → its images mislabelled, router gate only / + match gate | animals 31.5% → 3.5%, birds 33.1% → 2.1% |
-| Pizza refused, router gate / router + match gate | 74% / 36.5% |
-
-### Experiment 3 — hierarchy: domain → one plug-in leaf per class (`results/results_whole_image_v3.json`)
-
-| Metric | Hierarchical | Flat |
+| | Accuracy | Anatomy credit (head↔face, arm↔hand … counted right) |
 |---|---|---|
-| Right domain | 99.76% | — |
-| Right class first / in top 3 | 98.47 / 99.66% | 98.53 / 99.82% |
-| Descriptor comparisons per query | 102 | 152 |
-| Accuracy | 98.66% | 98.74% |
+| Routed tree, 5-NN vote (appearance only) | 61.9% | 91.2% |
+| Best leaf by its 3 nearest examples (appearance only) | 61.4% | 91.0% |
+| **+ anatomical signature on the skeleton** | **74.5%** | **94.0%** |
+| Signature alone (no appearance; instances with a skeleton) | 68.2% | 85.8% |
 
-| Unknown objects (≈5.4% of known images refused) | Lemon refused | Pizza refused |
-|---|---|---|
-| Router gate only | 2.0% | 97% |
-| Router + one global match threshold | 4.5% | 57.5% |
-| Router + per-leaf gate | 6.5% | 84% |
-
-Plug-out: removing a domain sends 99.5–100% of its images to unknown. Removing one class
-mislabels 28.5% of its images as a sibling on average (51% with a global threshold). Predictions are
-identical after every re-plug.
-
-**Speed** (`results/speed.json`, RTX 4060): single query (numpy) 0.26 ms. The batched GPU engine
-does ~183k queries/s, with 100% agreement with the single-query path. Encoder: fp32 333 img/s,
-fp16 426 img/s (cosine to fp32 ≥ 0.99996, same decisions).
-
-### Experiment 4 — object-level: class-agnostic detector, object-only modules
-
-Resolution floor sweep (`results/sweep/`; all rows calibrated to ≈5% of known images unknown):
-
-| Min object side | Objects/img | Accuracy | Extra wrong label | Pizza refused | Class plug-out → mislabelled | Domain plug-out → mislabelled |
-|---|---|---|---|---|---|---|
-| 0 px | 3.60 | 96.3 | 32.2% | 41% | 46.4% | 22.4% |
-| 32 px | 2.85 | 96.4 | 18.8% | 60.5% | 38.3% | 9.6% |
-| 48 px | 2.22 | 96.8 | 10.3% | 76% | 37.1% | 4.9% |
-| **64 px** | 1.78 | 97.1 | 4.3% | 74% | 30.6% | 1.3% |
-| 96 px | 1.30 | 97.7 | 1.8% | 72.5% | 31.8% | 0.5% |
-| whole image | 1 | 98.7 | 0.8% | 84% | 28.5% | 0.2% |
-
-Fixes found along the way: consensus picked parts (headlights, wheels) for vehicles (79–91%) until it
-was weighted toward whole objects. Picking the image's label by the most similar object gave 79.7%, and
-picking it by the area-weighted vote gave 96.3%.
-
-Multi-object test (`results/multi_object.json`, 600 two-object collages, live pipeline):
-
-| | Boxes | Soft masks | Whole image |
-|---|---|---|---|
-| Both objects named | 83.0% | 85.3% | 0% |
-| At least one named | 99.3% | 99.3% | 13.8% |
-| Any wrong label | 9.5% | 15.2% | 0.3% |
-
-### Experiment 4b — masks instead of boxes (SAM, box-prompted)
-
-| | Boxes | Mask, flat grey background | Mask, 50% background | Whole image |
-|---|---|---|---|---|
-| Accuracy | 97.1 | 91.1 | 96.3 | 98.7 |
-| Extra wrong label | 4.3% | 20.2% | 7.7% | 0.8% |
-| Pizza refused | 74% | 68.5% | 70% | 84% |
-| Class plug-out → mislabelled | 30.6% | 53.0% | 35.8% | 28.5% |
-
-Zero-shot CLIP on 514 labelled objects: box crop 97.3%, flat cut-out 91.4%, blurred background 95.9%,
-dimmed background 96.7%. CLIP needs some context, so cut-outs keep a 50% background.
-
-### Experiment 5 — people and handheld objects, v1 (`results/parts.json`)
-
-30 leaves in the registry. Test instances of the 11 new classes (forced / with gates): mean 76.1% / 70.5%.
-
-| person | face | hand | arm | leg | phone | bottle | cup | knife | ball | book |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 79.4 | 93.9 | 93.8 | 57.0 | 67.3 | 72.3 | 61.0 | 77.3 | 83.0 | 72.7 | 79.0 |
-
-The domain gate was recalibrated over all domains: 0.528 → 0.449 (stored in `modules_masks/registry.json`).
-
-### Experiment 6 — human identification model, routing quality (`results/human.json`)
-
-Tree `people/ → {person, face_region/{head, face, hair, eye, nose, mouth, ear}, limbs/{arm, hand, leg, foot}}`,
-evaluated in the full registry (with the non-human domains), CLIP ViT-B/32, 3,407 test instances.
-Versions: A = ground-truth crops, B = + detector-style positives, C = + negatives (non-elements only) with a reject margin.
-
-| | A | B | C | Flat (C) |
-|---|---|---|---|---|
-| Human instances routed to `people` | 94.9% | 92.7% | 95.5% | — |
-| Right region (person / face region / limbs) | 73.3% | 73.9% | 75.0% | — |
-| Router's first part choice | 51.4% | 51.2% | 49.4% | 50.2% |
-| Right part among the 3 kept | 84.9% | 83.4% | 84.2% | 82.8% |
-| Final part accuracy | 48.2% | 49.9% | 49.3% | 50.5% |
-| Errors that are anatomically adjacent (head↔face, arm↔hand …) | 65% | 61% | 64% | — |
-| Non-human objects routed to / accepted as people | 2.1 / 1.3% | 2.4 / 1.4% | 3.3 / 1.3% | — |
-
-Per part (A): eye 86, nose 87, mouth 82, ear 70, hand 66, face 61, leg 50, hair 46, arm 38, foot 32, head 32, person 29%.
-The detector-proposal evaluation (precision ≤ 0.13 per part) is unreliable, because Open Images doesn't label
-every part in a photo, so many "background" proposals are unlabelled people or faces.
-
-Geometry test (kNN on the part's box relative to its person, same split): embedding only 57.4%,
-embedding + geometry 75.1%. Note that the geometry features included a flag that gives the person label away,
-so the gain is overstated. Head (36 → 53%) and leg (33 → 60%) improved.
-
-### Experiment 7 — which frozen encoder? (`results/encoders.json`)
-
-Same 16.5k soft-mask crops, same split, people tree only, image entries only.
-
-| Encoder | kNN | Routed | Anatomy credit | Right region | Part in top 3 | img/s |
-|---|---|---|---|---|---|---|
-| CLIP ViT-B/32 (current) | 56.0 | 56.0 | 86.9 | 76.8 | 89.2 | 353 |
-| CLIP ViT-L/14 (DFN-2B) | 57.8 | 58.0 | 89.2 | 81.3 | 91.4 | 57 |
-| EVA02-L/14 | 55.6 | 56.1 | 90.2 | 80.0 | 91.7 | 61 |
-| **SigLIP SO400M** | **62.2** | **61.9** | **91.2** | **84.0** | **92.8** | 38 |
-| CLIP ViT-H/14 (DFN-5B) | 61.2 | 60.5 | 90.8 | 82.8 | 92.6 | 37 |
-| DINOv2-B/14 | 56.7 | 56.4 | 86.9 | 77.2 | 88.9 | 208 |
-| DINOv2-L/14 | 55.5 | 55.7 | 88.1 | 74.9 | 87.3 | 74 |
-
-Per part, routed (%):
-
-| Encoder | person | head | face | hair | eye | nose | mouth | ear | arm | hand | leg | foot |
+| Per part (%) | person | head | face | hair | eye | nose | mouth | ear | arm | hand | leg | foot |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| CLIP B/32 | 55 | 35 | 58 | 49 | 88 | 87 | 78 | 62 | 50 | 67 | 42 | 27 |
-| CLIP L/14 | 54 | 30 | 75 | 48 | 86 | 90 | 81 | 73 | 54 | 72 | 44 | 49 |
-| EVA02-L | 50 | 30 | 54 | 45 | 91 | 91 | 81 | 75 | 56 | 75 | 54 | 51 |
-| SigLIP SO400M | 58 | 35 | 62 | 53 | 91 | 94 | 79 | 82 | 66 | 76 | 51 | 54 |
-| CLIP H/14 | 57 | 34 | 65 | 52 | 89 | 91 | 83 | 78 | 59 | 74 | 54 | 57 |
-| DINOv2-B | 62 | 35 | 56 | 41 | 84 | 90 | 80 | 70 | 45 | 69 | 36 | 57 |
-| DINOv2-L | 61 | 37 | 44 | 38 | 90 | 90 | 86 | 78 | 43 | 67 | 43 | 60 |
+| Appearance (routed) | 58 | 35 | 62 | 53 | 91 | 94 | 79 | 82 | 66 | 76 | 51 | 54 |
+| + geometry | **88** | **43** | **67** | 53 | **97** | **97** | **85** | **94** | **75** | **84** | **69** | **62** |
 
-### What the results say
-
-1. **Modularity works:** plugging in and out is exact and instant, and whole domains unplug cleanly.
-   Removing a single class still leaks about 30% of its images to a sibling.
-2. **On object-centric benchmarks MOSAIC matches CLIP, but doesn't beat it,** because every class there is
-   already known to CLIP. Object-level recognition is what makes multi-object images work (83% vs 0%).
-3. **Body parts are the hard case.** The domain level is solid (95% routed to people, 2–3% false human), but
-   parts that contain each other (person ⊃ head ⊃ face, arm ⊃ hand) are separated by extent rather than
-   appearance. The best encoder lifts part accuracy from 56% to 62%; with anatomy credit it reaches 91%.
-   Relative size and position are the missing signal.
+- **Appearance and geometry fail differently, so combining them works.** Parts that contain each other look
+  alike but sit differently on the skeleton. The biggest gains are for person (+30 points), legs (+18) and ears (+12).
+- **Head vs. face vs. hair is still the main confusion** (head→face 117 and head→hair 82 of the 870 errors).
+  Their boxes hold the same joints and differ only in extent.
+- **Caveats.** Skeletons here were estimated in the ground-truth person boxes, and 96.4% of test instances
+  have one. In a live session, person boxes come from the detector and the appearance model. For a person
+  cut off by the frame, the box-relative position can mislead (a hand at the bottom of a cropped portrait
+  can read as a leg). Measuring from the neck in torso lengths avoids that, but it scored lower (71.3%), so
+  the box-relative version ships. The domain gate for "is this human at all" is calibrated on human parts only
+  (1st percentile, 0.578). Non-human rejection with SigLIP isn't measured yet.
 
 ## Roadmap
 
-- [x] Core: module format, registry, router, matcher, pipeline (numpy)
-- [x] CLIP encoder + whole-image perceiver, build modules from image folders
-- [x] Experiment 1: animals + fruits (4 classes)
-- [x] Experiment 2: 19 classes / 4 modules, two-gate abstention
-- [x] Experiment 3: hierarchical tree (domain → class leaves), per-leaf gates (see `results/report.md`)
-- [x] Experiment 4: class-agnostic object detection, object-only modules (area-aware consensus),
-      64 px resolution floor, image-level gate calibration, multi-object collage test (see `results/report.md`)
-- [x] Experiment 4b: SAM masks (flat vs soft cut-outs) vs boxes
-- [x] Batched GPU engine + fp16 encoder (see `results/speed.json`)
-- [x] Experiment 5: people + handheld leaves (v1), `part_of`, registry-level domain gate
-- [x] Experiment 6: human identification model (3-level people tree), routing quality, negatives
-- [x] Experiment 7: frozen-encoder comparison on body parts (SigLIP SO400M best)
-- [ ] Switch to SigLIP SO400M and rebuild all modules; add relative size/position as a routing signal for nested parts
-- [ ] Query understanding + compositional checks ("red t-shirt" = `clothing/tshirt` + colour check),
-      hierarchy of abstract → basic concepts — design only, see `docs/query_understanding.md`
-- [ ] FAISS index for large modules
-- [ ] Experiments: routing accuracy, retrieval quality, latency vs. #modules,
-      cost of adding a concept vs. fine-tuned baseline
-- [ ] Failure-mode study: misrouting, contradictory modules, drift, storage
+- [x] Core: module format, registry, router, matcher, gates; batched GPU engine
+- [x] Experiments 1–7: five domains, hierarchy, class-agnostic detection, masks, people tree, encoder comparison
+- [x] Scope: one domain (people), SigLIP SO400M, LLM access through MCP only (no VLM in the loop)
+- [x] Skeleton sensor (ViTPose) and the geometry rule language, with 49 default rules
+- [x] Anatomical signatures per leaf; geometry re-ranking in `identify` (experiment 8: 61.9 → 74.5%)
+- [x] Run-time `teach` / `forget` / `define_rule` / `explain`
+- [ ] **Benchmark: LLM + MOSAIC vs. a frontier VLM.** Task groups: novel-instance recognition after `teach`,
+      unlearning after `forget`, abstention on out-of-domain objects, exact pose geometry (angles, left/right,
+      counts), small-detail questions, evidence quality
+- [ ] Collection index: `index_collection` / `query_collection` over thousands of photos
+- [ ] Handheld objects as taught modules, and a "holding" evaluation (hand–object contact)
+- [ ] Head / face / hair: an extent-aware feature (the box's share of the head region)
+- [ ] Non-human rejection with SigLIP (negatives / reject margin, as in experiment 6 version C)
+- [ ] Attribute checks (colour of a mask, size, count), from [`docs/query_understanding.md`](docs/query_understanding.md)
+- [ ] Deterministic body-plan gate: classify a mask's topology (limb count/symmetry via skeletonization or
+      contour analysis) before embedding-based routing, independent of any learned module; route only the
+      registry subtree consistent with that class, and boost/flag routing confidence when the embedding match
+      and the deterministic class agree or disagree
+- [ ] True 3D joint angles from multi-view input: ORB-based keypoint tracking across frames plus SLAM-style
+      triangulation to recover depth, replacing the current 2D image-plane approximation in `geometry.py`
+      (`angle()` on projected joints is foreshortening-prone single-view)

@@ -1,0 +1,62 @@
+{
+  "models": {
+    "slm": "qwen2.5:7b-instruct",
+    "vlm": "qwen2.5vl:7b"
+  },
+  "n_per_task": 25,
+  "seed": 0,
+  "slm": {
+    "count": {
+      "n": 25,
+      "accuracy": 0.48,
+      "unparsed": 0,
+      "mean_seconds": 86.8,
+      "mean_tool_calls": 6.5,
+      "mean_abs_error": 0.92
+    },
+    "locate": {
+      "n": 25,
+      "accuracy": 0.04,
+      "unparsed": 1,
+      "mean_seconds": 59.0,
+      "mean_tool_calls": 4.5,
+      "mean_best_iou": 0.087
+    },
+    "presence": {
+      "n": 50,
+      "accuracy": 0.68,
+      "unparsed": 2,
+      "mean_seconds": 59.1,
+      "mean_tool_calls": 4.8,
+      "acc_truth_yes": 0.96,
+      "acc_truth_no": 0.4
+    }
+  },
+  "vlm": {
+    "count": {
+      "n": 25,
+      "accuracy": 0.64,
+      "unparsed": 0,
+      "mean_seconds": 2.3,
+      "mean_tool_calls": 1.0,
+      "mean_abs_error": 1.56
+    },
+    "locate": {
+      "n": 25,
+      "accuracy": 0.2,
+      "unparsed": 0,
+      "mean_seconds": 1.8,
+      "mean_tool_calls": 1.0,
+      "mean_best_iou": 0.323
+    },
+    "presence": {
+      "n": 50,
+      "accuracy": 0.9,
+      "unparsed": 0,
+      "mean_seconds": 2.1,
+      "mean_tool_calls": 1.0,
+      "acc_truth_yes": 0.92,
+      "acc_truth_no": 0.88
+    }
+  }
+}

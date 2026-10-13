@@ -1,0 +1,213 @@
+{
+  "encoder": "open_clip/ViT-SO400M-14-SigLIP/webli",
+  "route_threshold": 0.5784500712156295,
+  "geometry_weight": 0.005,
+  "n_build": 11434,
+  "n_test": 3407,
+  "test_with_skeleton": 0.9639,
+  "all_test": {
+    "routed": {
+      "n": 3407,
+      "accuracy": 0.6193,
+      "accuracy_anatomy_credit": 0.9125,
+      "per_part": {
+        "person": 0.581,
+        "head": 0.351,
+        "face": 0.618,
+        "hair": 0.533,
+        "eye": 0.909,
+        "nose": 0.94,
+        "mouth": 0.792,
+        "ear": 0.822,
+        "arm": 0.665,
+        "hand": 0.756,
+        "leg": 0.514,
+        "foot": 0.541
+      }
+    },
+    "leafsim": {
+      "n": 3407,
+      "accuracy": 0.6143,
+      "accuracy_anatomy_credit": 0.9099,
+      "per_part": {
+        "person": 0.552,
+        "head": 0.395,
+        "face": 0.624,
+        "hair": 0.531,
+        "eye": 0.914,
+        "nose": 0.925,
+        "mouth": 0.792,
+        "ear": 0.808,
+        "arm": 0.655,
+        "hand": 0.741,
+        "leg": 0.497,
+        "foot": 0.568
+      }
+    },
+    "geometry": {
+      "n": 3407,
+      "accuracy": 0.7446,
+      "accuracy_anatomy_credit": 0.9395,
+      "per_part": {
+        "person": 0.883,
+        "head": 0.43,
+        "face": 0.667,
+        "hair": 0.528,
+        "eye": 0.973,
+        "nose": 0.97,
+        "mouth": 0.854,
+        "ear": 0.945,
+        "arm": 0.746,
+        "hand": 0.839,
+        "leg": 0.686,
+        "foot": 0.622
+      }
+    }
+  },
+  "with_skeleton": {
+    "routed": {
+      "n": 3284,
+      "accuracy": 0.627,
+      "accuracy_anatomy_credit": 0.9126,
+      "per_part": {
+        "person": 0.594,
+        "head": 0.348,
+        "face": 0.627,
+        "hair": 0.537,
+        "eye": 0.912,
+        "nose": 0.943,
+        "mouth": 0.82,
+        "ear": 0.819,
+        "arm": 0.678,
+        "hand": 0.76,
+        "leg": 0.531,
+        "foot": 0.529
+      }
+    },
+    "leafsim": {
+      "n": 3284,
+      "accuracy": 0.6209,
+      "accuracy_anatomy_credit": 0.9102,
+      "per_part": {
+        "person": 0.564,
+        "head": 0.393,
+        "face": 0.637,
+        "hair": 0.531,
+        "eye": 0.917,
+        "nose": 0.928,
+        "mouth": 0.82,
+        "ear": 0.806,
+        "arm": 0.663,
+        "hand": 0.74,
+        "leg": 0.514,
+        "foot": 0.559
+      }
+    },
+    "geometry": {
+      "n": 3284,
+      "accuracy": 0.7561,
+      "accuracy_anatomy_credit": 0.9409,
+      "per_part": {
+        "person": 0.904,
+        "head": 0.429,
+        "face": 0.682,
+        "hair": 0.528,
+        "eye": 0.978,
+        "nose": 0.974,
+        "mouth": 0.885,
+        "ear": 0.944,
+        "arm": 0.756,
+        "hand": 0.844,
+        "leg": 0.712,
+        "foot": 0.618
+      }
+    },
+    "geometry_alone": {
+      "n": 3284,
+      "accuracy": 0.6818,
+      "accuracy_anatomy_credit": 0.8581,
+      "per_part": {
+        "person": 0.935,
+        "head": 0.518,
+        "face": 0.514,
+        "hair": 0.199,
+        "eye": 0.928,
+        "nose": 0.892,
+        "mouth": 0.738,
+        "ear": 0.958,
+        "arm": 0.693,
+        "hand": 0.526,
+        "leg": 0.667,
+        "foot": 0.529
+      }
+    }
+  },
+  "confusions_leafsim": [
+    [
+      "head->face",
+      120
+    ],
+    [
+      "person->head",
+      109
+    ],
+    [
+      "head->hair",
+      95
+    ],
+    [
+      "hair->head",
+      83
+    ],
+    [
+      "person->face",
+      76
+    ],
+    [
+      "person->hair",
+      70
+    ],
+    [
+      "person->arm",
+      60
+    ],
+    [
+      "arm->hand",
+      60
+    ]
+  ],
+  "confusions_geometry": [
+    [
+      "head->face",
+      117
+    ],
+    [
+      "head->hair",
+      82
+    ],
+    [
+      "arm->hand",
+      64
+    ],
+    [
+      "hair->head",
+      63
+    ],
+    [
+      "face->head",
+      61
+    ],
+    [
+      "hair->person",
+      39
+    ],
+    [
+      "hair->face",
+      26
+    ],
+    [
+      "person->hair",
+      24
+    ]
+  ]
+}

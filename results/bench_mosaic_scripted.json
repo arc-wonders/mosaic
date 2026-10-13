@@ -1,0 +1,3035 @@
+[
+ {
+  "qid": "presence_000",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01044.jpg",
+  "known": [
+   [
+    "people/limbs/leg",
+    0.795
+   ],
+   [
+    "people/person",
+    0.732
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_001",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01126.jpg",
+  "known": [
+   [
+    "people/person",
+    0.758
+   ],
+   [
+    "people/person",
+    0.749
+   ],
+   [
+    "people/face_region/head",
+    0.78
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_002",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00085.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.82
+   ],
+   [
+    "people/limbs/arm",
+    0.765
+   ],
+   [
+    "people/limbs/leg",
+    0.736
+   ],
+   [
+    "people/limbs/arm",
+    0.811
+   ],
+   [
+    "people/limbs/leg",
+    0.895
+   ],
+   [
+    "people/person",
+    0.783
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_003",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00667.jpg",
+  "known": [
+   [
+    "people/face_region/face",
+    0.783
+   ],
+   [
+    "people/limbs/arm",
+    0.775
+   ],
+   [
+    "people/person",
+    0.747
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_004",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01350.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.861
+   ],
+   [
+    "people/face_region/hair",
+    0.763
+   ],
+   [
+    "people/face_region/hair",
+    0.76
+   ],
+   [
+    "people/limbs/hand",
+    0.789
+   ],
+   [
+    "people/limbs/hand",
+    0.83
+   ],
+   [
+    "people/limbs/hand",
+    0.777
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_005",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01292.jpg",
+  "known": [
+   [
+    "people/person",
+    0.714
+   ],
+   [
+    "people/person",
+    0.696
+   ],
+   [
+    "people/person",
+    0.761
+   ],
+   [
+    "people/face_region/face",
+    0.869
+   ],
+   [
+    "people/face_region/head",
+    0.769
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_006",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01082.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.742
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_007",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00801.jpg",
+  "known": [
+   [
+    "people/face_region/head",
+    0.741
+   ],
+   [
+    "people/face_region/hair",
+    0.734
+   ],
+   [
+    "people/face_region/head",
+    0.758
+   ],
+   [
+    "people/limbs/hand",
+    0.871
+   ],
+   [
+    "people/person",
+    0.686
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_008",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01285.jpg",
+  "known": [
+   [
+    "people/face_region/hair",
+    0.745
+   ],
+   [
+    "people/face_region/hair",
+    0.786
+   ],
+   [
+    "people/face_region/hair",
+    0.723
+   ],
+   [
+    "people/face_region/hair",
+    0.75
+   ],
+   [
+    "people/face_region/hair",
+    0.757
+   ],
+   [
+    "people/face_region/hair",
+    0.776
+   ],
+   [
+    "people/face_region/hair",
+    0.761
+   ],
+   [
+    "people/face_region/hair",
+    0.762
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_009",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00976.jpg",
+  "known": [
+   [
+    "people/person",
+    0.751
+   ],
+   [
+    "people/limbs/leg",
+    0.833
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_010",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01532.jpg",
+  "known": [
+   [
+    "people/face_region/hair",
+    0.847
+   ],
+   [
+    "people/limbs/hand",
+    0.789
+   ],
+   [
+    "people/person",
+    0.834
+   ],
+   [
+    "people/face_region/face",
+    0.85
+   ],
+   [
+    "people/limbs/arm",
+    0.797
+   ],
+   [
+    "people/limbs/arm",
+    0.785
+   ],
+   [
+    "people/face_region/ear",
+    0.908
+   ],
+   [
+    "people/limbs/arm",
+    0.844
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_011",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00564.jpg",
+  "known": [
+   [
+    "people/person",
+    0.698
+   ],
+   [
+    "people/person",
+    0.699
+   ],
+   [
+    "people/limbs/leg",
+    0.747
+   ],
+   [
+    "people/person",
+    0.767
+   ],
+   [
+    "people/limbs/arm",
+    0.753
+   ],
+   [
+    "people/face_region/mouth",
+    0.796
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_012",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01337.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.758
+   ],
+   [
+    "people/face_region/hair",
+    0.793
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_013",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00343.jpg",
+  "known": [
+   [
+    "people/face_region/hair",
+    0.815
+   ],
+   [
+    "people/face_region/face",
+    0.803
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_014",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00717.jpg",
+  "known": [
+   [
+    "people/person",
+    0.774
+   ],
+   [
+    "people/person",
+    0.763
+   ],
+   [
+    "people/person",
+    0.742
+   ],
+   [
+    "people/face_region/nose",
+    0.848
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_015",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00212.jpg",
+  "known": [
+   [
+    "people/limbs/leg",
+    0.746
+   ],
+   [
+    "people/person",
+    0.693
+   ],
+   [
+    "people/person",
+    0.694
+   ],
+   [
+    "people/limbs/arm",
+    0.742
+   ],
+   [
+    "people/person",
+    0.712
+   ],
+   [
+    "people/limbs/leg",
+    0.822
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_016",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01608.jpg",
+  "known": [
+   [
+    "people/person",
+    0.714
+   ],
+   [
+    "people/person",
+    0.772
+   ],
+   [
+    "people/person",
+    0.761
+   ],
+   [
+    "people/person",
+    0.773
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_017",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00642.jpg",
+  "known": [
+   [
+    "people/person",
+    0.829
+   ],
+   [
+    "people/limbs/arm",
+    0.803
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_018",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01423.jpg",
+  "known": [
+   [
+    "people/person",
+    0.777
+   ],
+   [
+    "people/person",
+    0.715
+   ],
+   [
+    "people/limbs/arm",
+    0.778
+   ],
+   [
+    "people/person",
+    0.843
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_019",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01579.jpg",
+  "known": [
+   [
+    "people/face_region/head",
+    0.811
+   ],
+   [
+    "people/face_region/face",
+    0.831
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_020",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00364.jpg",
+  "known": [
+   [
+    "people/face_region/mouth",
+    0.805
+   ],
+   [
+    "people/face_region/head",
+    0.762
+   ],
+   [
+    "people/person",
+    0.729
+   ],
+   [
+    "people/face_region/hair",
+    0.783
+   ],
+   [
+    "people/face_region/hair",
+    0.808
+   ],
+   [
+    "people/person",
+    0.769
+   ],
+   [
+    "people/limbs/arm",
+    0.903
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_021",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00836.jpg",
+  "known": [
+   [
+    "people/person",
+    0.704
+   ],
+   [
+    "people/limbs/arm",
+    0.756
+   ],
+   [
+    "people/limbs/leg",
+    0.855
+   ],
+   [
+    "people/limbs/leg",
+    0.846
+   ],
+   [
+    "people/person",
+    0.755
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_022",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00225.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": false
+ },
+ {
+  "qid": "presence_023",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00136.jpg",
+  "known": [
+   [
+    "people/person",
+    0.765
+   ],
+   [
+    "people/limbs/arm",
+    0.754
+   ],
+   [
+    "people/face_region/hair",
+    0.826
+   ],
+   [
+    "people/person",
+    0.706
+   ],
+   [
+    "people/limbs/leg",
+    0.822
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_024",
+  "task": "presence",
+  "truth": "yes",
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00903.jpg",
+  "known": [
+   [
+    "people/person",
+    0.687
+   ],
+   [
+    "people/person",
+    0.715
+   ],
+   [
+    "people/limbs/foot",
+    0.829
+   ],
+   [
+    "people/person",
+    0.754
+   ]
+  ],
+  "pred": "yes",
+  "correct": true
+ },
+ {
+  "qid": "presence_025",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/scooter/imagenet_0735.jpg",
+  "known": [
+   [
+    "people/face_region/hair",
+    0.804
+   ],
+   [
+    "people/person",
+    0.795
+   ],
+   [
+    "people/person",
+    0.699
+   ],
+   [
+    "people/limbs/arm",
+    0.81
+   ],
+   [
+    "people/person",
+    0.748
+   ],
+   [
+    "people/person",
+    0.681
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_026",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/fruits/apple/fruits360_0171.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": true
+ },
+ {
+  "qid": "presence_027",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/animals/dog/cats_vs_dogs_0649.jpg",
+  "known": [
+   [
+    "people/person",
+    0.791
+   ],
+   [
+    "people/limbs/arm",
+    0.777
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_028",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/pickup_truck/imagenet_0796.jpg",
+  "known": [
+   [
+    "people/person",
+    0.834
+   ],
+   [
+    "people/limbs/arm",
+    0.755
+   ],
+   [
+    "people/person",
+    0.685
+   ],
+   [
+    "people/person",
+    0.774
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_029",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/scooter/imagenet_0113.jpg",
+  "known": [
+   [
+    "people/person",
+    0.774
+   ],
+   [
+    "people/limbs/arm",
+    0.78
+   ],
+   [
+    "people/person",
+    0.71
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_030",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/pickup_truck/imagenet_0180.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.868
+   ],
+   [
+    "people/person",
+    0.809
+   ],
+   [
+    "people/person",
+    0.817
+   ],
+   [
+    "people/limbs/arm",
+    0.745
+   ],
+   [
+    "people/face_region/mouth",
+    0.833
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_031",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/fruits/banana/fruits360_0008.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": true
+ },
+ {
+  "qid": "presence_032",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/fruits/banana/imagenet_0192.jpg",
+  "known": [
+   [
+    "people/face_region/nose",
+    0.859
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_033",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/animals/zebra/imagenet_0350.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": true
+ },
+ {
+  "qid": "presence_034",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/fruits/apple/fruits360_0052.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": true
+ },
+ {
+  "qid": "presence_035",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/scooter/imagenet_0815.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": true
+ },
+ {
+  "qid": "presence_036",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/scooter/imagenet_0253.jpg",
+  "known": [
+   [
+    "people/person",
+    0.799
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_037",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/ood/pizza/imagenet_0177.jpg",
+  "known": [
+   [
+    "people/limbs/leg",
+    0.754
+   ],
+   [
+    "people/limbs/hand",
+    0.787
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_038",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/sports_car/imagenet_0541.jpg",
+  "known": [
+   [
+    "people/limbs/hand",
+    0.808
+   ],
+   [
+    "people/limbs/hand",
+    0.792
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_039",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/airplane/imagenet_0267.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": true
+ },
+ {
+  "qid": "presence_040",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/animals/dog/cats_vs_dogs_0020.jpg",
+  "known": [
+   [
+    "people/person",
+    0.773
+   ],
+   [
+    "people/person",
+    0.765
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_041",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/fruits/strawberry/fruits360_0189.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": true
+ },
+ {
+  "qid": "presence_042",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/sports_car/imagenet_0989.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": true
+ },
+ {
+  "qid": "presence_043",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/animals/cat/cats_vs_dogs_0230.jpg",
+  "known": [
+   [
+    "people/face_region/head",
+    0.764
+   ],
+   [
+    "people/limbs/arm",
+    0.774
+   ],
+   [
+    "people/person",
+    0.759
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_044",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/animals/dog/cats_vs_dogs_0528.jpg",
+  "known": [
+   [
+    "people/limbs/hand",
+    0.783
+   ],
+   [
+    "people/person",
+    0.747
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_045",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/fruits/orange/imagenet_0491.jpg",
+  "known": [],
+  "pred": "no",
+  "correct": true
+ },
+ {
+  "qid": "presence_046",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/fruits/strawberry/imagenet_0464.jpg",
+  "known": [
+   [
+    "people/face_region/mouth",
+    0.774
+   ],
+   [
+    "people/face_region/mouth",
+    0.813
+   ],
+   [
+    "people/face_region/mouth",
+    0.86
+   ],
+   [
+    "people/face_region/mouth",
+    0.788
+   ],
+   [
+    "people/face_region/nose",
+    0.864
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_047",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/vehicles/school_bus/imagenet_0534.jpg",
+  "known": [
+   [
+    "people/face_region/nose",
+    0.846
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_048",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/fruits/orange/imagenet_0336.jpg",
+  "known": [
+   [
+    "people/face_region/nose",
+    0.859
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "presence_049",
+  "task": "presence",
+  "truth": "no",
+  "image": "/home/arkin/code/mosaic/data/raw/fruits/strawberry/imagenet_0214.jpg",
+  "known": [
+   [
+    "people/face_region/hair",
+    0.817
+   ]
+  ],
+  "pred": "yes",
+  "correct": false
+ },
+ {
+  "qid": "count_050",
+  "task": "count",
+  "truth": 3,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00003.jpg",
+  "known": [
+   [
+    "people/limbs/hand",
+    0.776
+   ],
+   [
+    "people/limbs/arm",
+    0.786
+   ],
+   [
+    "people/limbs/hand",
+    0.813
+   ],
+   [
+    "people/limbs/arm",
+    0.844
+   ],
+   [
+    "people/limbs/hand",
+    0.855
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 0,
+  "correct": false
+ },
+ {
+  "qid": "count_051",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01494.jpg",
+  "known": [
+   [
+    "people/person",
+    0.777
+   ],
+   [
+    "people/limbs/arm",
+    0.874
+   ],
+   [
+    "people/face_region/hair",
+    0.78
+   ],
+   [
+    "people/face_region/hair",
+    0.716
+   ],
+   [
+    "people/limbs/hand",
+    0.843
+   ],
+   [
+    "people/face_region/hair",
+    0.717
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 1,
+  "correct": true
+ },
+ {
+  "qid": "count_052",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01055.jpg",
+  "known": [
+   [
+    "people/person",
+    0.904
+   ],
+   [
+    "people/face_region/head",
+    0.758
+   ],
+   [
+    "people/face_region/head",
+    0.78
+   ],
+   [
+    "people/limbs/arm",
+    0.753
+   ],
+   [
+    "people/face_region/head",
+    0.85
+   ],
+   [
+    "people/limbs/leg",
+    0.802
+   ],
+   [
+    "people/person",
+    0.838
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 2,
+  "correct": true
+ },
+ {
+  "qid": "count_053",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00768.jpg",
+  "known": [
+   [
+    "people/face_region/hair",
+    0.728
+   ],
+   [
+    "people/limbs/arm",
+    0.78
+   ],
+   [
+    "people/limbs/hand",
+    0.782
+   ],
+   [
+    "people/limbs/arm",
+    0.782
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 0,
+  "correct": true
+ },
+ {
+  "qid": "count_054",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01039.jpg",
+  "known": [
+   [
+    "people/person",
+    0.844
+   ],
+   [
+    "people/face_region/head",
+    0.721
+   ],
+   [
+    "people/limbs/leg",
+    0.754
+   ],
+   [
+    "people/face_region/hair",
+    0.777
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 1,
+  "correct": true
+ },
+ {
+  "qid": "count_055",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00198.jpg",
+  "known": [
+   [
+    "people/person",
+    0.712
+   ],
+   [
+    "people/limbs/leg",
+    0.77
+   ]
+  ],
+  "pred": 3,
+  "n_person_objects": 1,
+  "correct": false
+ },
+ {
+  "qid": "count_056",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00615.jpg",
+  "known": [
+   [
+    "people/face_region/head",
+    0.764
+   ],
+   [
+    "people/limbs/arm",
+    0.749
+   ],
+   [
+    "people/person",
+    0.751
+   ],
+   [
+    "people/limbs/arm",
+    0.77
+   ],
+   [
+    "people/limbs/hand",
+    0.781
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 1,
+  "correct": true
+ },
+ {
+  "qid": "count_057",
+  "task": "count",
+  "truth": 2,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01653.jpg",
+  "known": [
+   [
+    "people/person",
+    0.679
+   ],
+   [
+    "people/person",
+    0.683
+   ],
+   [
+    "people/person",
+    0.77
+   ],
+   [
+    "people/face_region/hair",
+    0.725
+   ]
+  ],
+  "pred": 2,
+  "n_person_objects": 3,
+  "correct": true
+ },
+ {
+  "qid": "count_058",
+  "task": "count",
+  "truth": 2,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00698.jpg",
+  "known": [
+   [
+    "people/person",
+    0.87
+   ],
+   [
+    "people/person",
+    0.907
+   ],
+   [
+    "people/face_region/head",
+    0.86
+   ],
+   [
+    "people/face_region/head",
+    0.753
+   ],
+   [
+    "people/face_region/head",
+    0.816
+   ],
+   [
+    "people/person",
+    0.869
+   ],
+   [
+    "people/face_region/head",
+    0.792
+   ],
+   [
+    "people/face_region/head",
+    0.86
+   ]
+  ],
+  "pred": 2,
+  "n_person_objects": 3,
+  "correct": true
+ },
+ {
+  "qid": "count_059",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00759.jpg",
+  "known": [
+   [
+    "people/person",
+    0.891
+   ],
+   [
+    "people/limbs/arm",
+    0.83
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 1,
+  "correct": true
+ },
+ {
+  "qid": "count_060",
+  "task": "count",
+  "truth": 3,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00469.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.797
+   ],
+   [
+    "people/person",
+    0.763
+   ],
+   [
+    "people/face_region/hair",
+    0.85
+   ],
+   [
+    "people/face_region/hair",
+    0.777
+   ],
+   [
+    "people/limbs/arm",
+    0.807
+   ],
+   [
+    "people/face_region/hair",
+    0.84
+   ],
+   [
+    "people/person",
+    0.744
+   ]
+  ],
+  "pred": 4,
+  "n_person_objects": 2,
+  "correct": false
+ },
+ {
+  "qid": "count_061",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01599.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.786
+   ],
+   [
+    "people/person",
+    0.784
+   ],
+   [
+    "people/limbs/arm",
+    0.775
+   ],
+   [
+    "people/limbs/arm",
+    0.862
+   ],
+   [
+    "people/limbs/arm",
+    0.78
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 1,
+  "correct": true
+ },
+ {
+  "qid": "count_062",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01357.jpg",
+  "known": [
+   [
+    "people/face_region/face",
+    0.863
+   ],
+   [
+    "people/face_region/face",
+    0.82
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 0,
+  "correct": true
+ },
+ {
+  "qid": "count_063",
+  "task": "count",
+  "truth": 3,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00319.jpg",
+  "known": [
+   [
+    "people/person",
+    0.72
+   ],
+   [
+    "people/face_region/head",
+    0.776
+   ],
+   [
+    "people/person",
+    0.728
+   ],
+   [
+    "people/person",
+    0.736
+   ],
+   [
+    "people/face_region/hair",
+    0.8
+   ],
+   [
+    "people/person",
+    0.73
+   ],
+   [
+    "people/person",
+    0.841
+   ]
+  ],
+  "pred": 5,
+  "n_person_objects": 5,
+  "correct": false
+ },
+ {
+  "qid": "count_064",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00263.jpg",
+  "known": [
+   [
+    "people/limbs/leg",
+    0.741
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 0,
+  "correct": true
+ },
+ {
+  "qid": "count_065",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01025.jpg",
+  "known": [
+   [
+    "people/limbs/leg",
+    0.846
+   ],
+   [
+    "people/person",
+    0.722
+   ],
+   [
+    "people/limbs/hand",
+    0.847
+   ],
+   [
+    "people/limbs/arm",
+    0.749
+   ],
+   [
+    "people/limbs/arm",
+    0.804
+   ],
+   [
+    "people/person",
+    0.832
+   ],
+   [
+    "people/limbs/leg",
+    0.747
+   ]
+  ],
+  "pred": 2,
+  "n_person_objects": 2,
+  "correct": false
+ },
+ {
+  "qid": "count_066",
+  "task": "count",
+  "truth": 2,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01524.jpg",
+  "known": [],
+  "pred": 3,
+  "n_person_objects": 0,
+  "correct": false
+ },
+ {
+  "qid": "count_067",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01483.jpg",
+  "known": [
+   [
+    "people/person",
+    0.695
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 1,
+  "correct": true
+ },
+ {
+  "qid": "count_068",
+  "task": "count",
+  "truth": 2,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00364.jpg",
+  "known": [
+   [
+    "people/face_region/mouth",
+    0.805
+   ],
+   [
+    "people/face_region/head",
+    0.762
+   ],
+   [
+    "people/person",
+    0.729
+   ],
+   [
+    "people/face_region/hair",
+    0.783
+   ],
+   [
+    "people/face_region/hair",
+    0.808
+   ],
+   [
+    "people/person",
+    0.769
+   ],
+   [
+    "people/limbs/arm",
+    0.903
+   ]
+  ],
+  "pred": 2,
+  "n_person_objects": 2,
+  "correct": true
+ },
+ {
+  "qid": "count_069",
+  "task": "count",
+  "truth": 2,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00972.jpg",
+  "known": [
+   [
+    "people/person",
+    0.729
+   ],
+   [
+    "people/person",
+    0.708
+   ],
+   [
+    "people/person",
+    0.792
+   ],
+   [
+    "people/limbs/arm",
+    0.749
+   ],
+   [
+    "people/limbs/leg",
+    0.811
+   ],
+   [
+    "people/person",
+    0.752
+   ]
+  ],
+  "pred": 5,
+  "n_person_objects": 4,
+  "correct": false
+ },
+ {
+  "qid": "count_070",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01614.jpg",
+  "known": [
+   [
+    "people/face_region/head",
+    0.719
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 0,
+  "correct": true
+ },
+ {
+  "qid": "count_071",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00953.jpg",
+  "known": [
+   [
+    "people/face_region/hair",
+    0.819
+   ],
+   [
+    "people/person",
+    0.793
+   ],
+   [
+    "people/face_region/hair",
+    0.825
+   ],
+   [
+    "people/face_region/hair",
+    0.756
+   ],
+   [
+    "people/face_region/face",
+    0.873
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 1,
+  "correct": true
+ },
+ {
+  "qid": "count_072",
+  "task": "count",
+  "truth": 5,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00397.jpg",
+  "known": [
+   [
+    "people/limbs/leg",
+    0.841
+   ],
+   [
+    "people/person",
+    0.703
+   ],
+   [
+    "people/person",
+    0.766
+   ],
+   [
+    "people/person",
+    0.746
+   ],
+   [
+    "people/limbs/leg",
+    0.82
+   ],
+   [
+    "people/face_region/hair",
+    0.748
+   ],
+   [
+    "people/person",
+    0.796
+   ],
+   [
+    "people/person",
+    0.802
+   ]
+  ],
+  "pred": 5,
+  "n_person_objects": 5,
+  "correct": true
+ },
+ {
+  "qid": "count_073",
+  "task": "count",
+  "truth": 3,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01608.jpg",
+  "known": [
+   [
+    "people/person",
+    0.714
+   ],
+   [
+    "people/person",
+    0.772
+   ],
+   [
+    "people/person",
+    0.761
+   ],
+   [
+    "people/person",
+    0.773
+   ]
+  ],
+  "pred": 4,
+  "n_person_objects": 4,
+  "correct": false
+ },
+ {
+  "qid": "count_074",
+  "task": "count",
+  "truth": 1,
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01593.jpg",
+  "known": [
+   [
+    "people/person",
+    0.689
+   ],
+   [
+    "people/face_region/head",
+    0.795
+   ],
+   [
+    "people/face_region/face",
+    0.794
+   ]
+  ],
+  "pred": 1,
+  "n_person_objects": 1,
+  "correct": true
+ },
+ {
+  "qid": "locate_075",
+  "task": "locate",
+  "truth": [
+   [
+    123,
+    0,
+    160,
+    24
+   ],
+   [
+    440,
+    253,
+    485,
+    367
+   ],
+   [
+    544,
+    260,
+    597,
+    362
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00613.jpg",
+  "known": [
+   [
+    "people/person",
+    0.768
+   ],
+   [
+    "people/face_region/face",
+    0.774
+   ],
+   [
+    "people/person",
+    0.745
+   ],
+   [
+    "people/limbs/arm",
+    0.817
+   ],
+   [
+    "people/person",
+    0.722
+   ],
+   [
+    "people/limbs/arm",
+    0.793
+   ],
+   [
+    "people/limbs/arm",
+    0.788
+   ]
+  ],
+  "pred": [
+   816,
+   255,
+   918,
+   357
+  ],
+  "iou": 0.0,
+  "best_candidate_iou": 0.13798111837327523,
+  "correct": false,
+  "part": "arm"
+ },
+ {
+  "qid": "locate_076",
+  "task": "locate",
+  "truth": [
+   [
+    0,
+    94,
+    1024,
+    806
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01502.jpg",
+  "known": [
+   [
+    "people/person",
+    0.741
+   ]
+  ],
+  "pred": [
+   204,
+   204,
+   306,
+   306
+  ],
+  "iou": 0.014269882373595506,
+  "best_candidate_iou": 0.8940486790594485,
+  "correct": false,
+  "part": "leg"
+ },
+ {
+  "qid": "locate_077",
+  "task": "locate",
+  "truth": [
+   [
+    234,
+    75,
+    387,
+    275
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01379.jpg",
+  "known": [],
+  "pred": [
+   255,
+   204,
+   357,
+   306
+  ],
+  "iou": 0.21450151057401812,
+  "best_candidate_iou": 0.21450151057401812,
+  "correct": false,
+  "part": "face"
+ },
+ {
+  "qid": "locate_078",
+  "task": "locate",
+  "truth": [
+   [
+    180,
+    34,
+    561,
+    571
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01471.jpg",
+  "known": [
+   [
+    "people/face_region/hair",
+    0.718
+   ],
+   [
+    "people/face_region/head",
+    0.787
+   ],
+   [
+    "people/person",
+    0.712
+   ]
+  ],
+  "pred": [
+   204,
+   204,
+   613,
+   613
+  ],
+  "iou": 0.5439655566119597,
+  "best_candidate_iou": 0.5439655566119597,
+  "correct": true,
+  "part": "head"
+ },
+ {
+  "qid": "locate_079",
+  "task": "locate",
+  "truth": [
+   [
+    76,
+    120,
+    266,
+    370
+   ],
+   [
+    344,
+    73,
+    456,
+    274
+   ],
+   [
+    550,
+    39,
+    883,
+    474
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00883.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.779
+   ],
+   [
+    "people/limbs/leg",
+    0.846
+   ],
+   [
+    "people/face_region/face",
+    0.857
+   ],
+   [
+    "people/face_region/head",
+    0.764
+   ],
+   [
+    "people/face_region/face",
+    0.785
+   ],
+   [
+    "people/face_region/head",
+    0.809
+   ]
+  ],
+  "pred": [
+   512,
+   256,
+   768,
+   512
+  ],
+  "iou": 0.2917963737282568,
+  "best_candidate_iou": 0.37136743824158724,
+  "correct": false,
+  "part": "face"
+ },
+ {
+  "qid": "locate_080",
+  "task": "locate",
+  "truth": [
+   [
+    515,
+    42,
+    824,
+    434
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01163.jpg",
+  "known": [
+   [
+    "people/person",
+    0.865
+   ],
+   [
+    "people/face_region/hair",
+    0.76
+   ],
+   [
+    "people/limbs/hand",
+    0.785
+   ],
+   [
+    "people/person",
+    0.835
+   ]
+  ],
+  "pred": [
+   337,
+   275,
+   664,
+   660
+  ],
+  "iou": 0.10607973778947934,
+  "best_candidate_iou": 0.3078455790784558,
+  "correct": false,
+  "part": "head"
+ },
+ {
+  "qid": "locate_081",
+  "task": "locate",
+  "truth": [
+   [
+    115,
+    313,
+    458,
+    689
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00335.jpg",
+  "known": [
+   [
+    "people/person",
+    0.696
+   ],
+   [
+    "people/face_region/hair",
+    0.739
+   ],
+   [
+    "people/person",
+    0.846
+   ],
+   [
+    "people/face_region/ear",
+    0.889
+   ],
+   [
+    "people/limbs/arm",
+    0.765
+   ]
+  ],
+  "pred": [
+   408,
+   561,
+   510,
+   663
+  ],
+  "iou": 0.037982602478551,
+  "best_candidate_iou": 0.18907824210365817,
+  "correct": false,
+  "part": "head"
+ },
+ {
+  "qid": "locate_082",
+  "task": "locate",
+  "truth": [
+   [
+    35,
+    381,
+    406,
+    779
+   ],
+   [
+    302,
+    402,
+    657,
+    796
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01483.jpg",
+  "known": [
+   [
+    "people/person",
+    0.695
+   ]
+  ],
+  "pred": [
+   0,
+   459,
+   102,
+   561
+  ],
+  "iou": 0.04519004417171423,
+  "best_candidate_iou": 0.2536242339297002,
+  "correct": false,
+  "part": "arm"
+ },
+ {
+  "qid": "locate_083",
+  "task": "locate",
+  "truth": [
+   [
+    294,
+    477,
+    426,
+    592
+   ],
+   [
+    520,
+    437,
+    621,
+    538
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01063.jpg",
+  "known": [
+   [
+    "people/limbs/hand",
+    0.793
+   ],
+   [
+    "people/person",
+    0.797
+   ],
+   [
+    "people/limbs/arm",
+    0.769
+   ]
+  ],
+  "pred": [
+   608,
+   608,
+   761,
+   761
+  ],
+  "iou": 0.0,
+  "best_candidate_iou": 0.4835481316149471,
+  "correct": false,
+  "part": "hand"
+ },
+ {
+  "qid": "locate_084",
+  "task": "locate",
+  "truth": [
+   [
+    6,
+    116,
+    1024,
+    683
+   ],
+   [
+    492,
+    116,
+    654,
+    397
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00948.jpg",
+  "known": [
+   [
+    "people/face_region/head",
+    0.756
+   ],
+   [
+    "people/limbs/arm",
+    0.82
+   ],
+   [
+    "people/face_region/head",
+    0.917
+   ],
+   [
+    "people/person",
+    0.722
+   ],
+   [
+    "people/face_region/face",
+    0.896
+   ]
+  ],
+  "pred": [
+   69,
+   218,
+   180,
+   360
+  ],
+  "iou": 0.027307408446897642,
+  "best_candidate_iou": 0.578833318887059,
+  "correct": false,
+  "part": "face"
+ },
+ {
+  "qid": "locate_085",
+  "task": "locate",
+  "truth": [
+   [
+    138,
+    218,
+    606,
+    780
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01445.jpg",
+  "known": [],
+  "pred": [
+   384,
+   512,
+   640,
+   768
+  ],
+  "iou": 0.209156484616517,
+  "best_candidate_iou": 0.24917115308574384,
+  "correct": false,
+  "part": "face"
+ },
+ {
+  "qid": "locate_086",
+  "task": "locate",
+  "truth": [
+   [
+    0,
+    0,
+    620,
+    328
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00699.jpg",
+  "known": [
+   [
+    "people/person",
+    0.789
+   ]
+  ],
+  "pred": [
+   561,
+   204,
+   663,
+   306
+  ],
+  "iou": 0.028968066773848836,
+  "best_candidate_iou": 0.07235103017463552,
+  "correct": false,
+  "part": "head"
+ },
+ {
+  "qid": "locate_087",
+  "task": "locate",
+  "truth": [
+   [
+    173,
+    166,
+    459,
+    430
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00887.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.839
+   ],
+   [
+    "people/face_region/head",
+    0.725
+   ],
+   [
+    "people/person",
+    0.808
+   ],
+   [
+    "people/face_region/head",
+    0.717
+   ],
+   [
+    "people/limbs/hand",
+    0.808
+   ],
+   [
+    "people/limbs/hand",
+    0.823
+   ]
+  ],
+  "pred": [
+   132,
+   64,
+   526,
+   307
+  ],
+  "iou": 0.3080201649862511,
+  "best_candidate_iou": 0.3080201649862511,
+  "correct": false,
+  "part": "head"
+ },
+ {
+  "qid": "locate_088",
+  "task": "locate",
+  "truth": [
+   [
+    0,
+    24,
+    50,
+    55
+   ],
+   [
+    30,
+    30,
+    81,
+    50
+   ],
+   [
+    107,
+    277,
+    329,
+    412
+   ],
+   [
+    190,
+    0,
+    231,
+    54
+   ],
+   [
+    224,
+    277,
+    331,
+    529
+   ],
+   [
+    286,
+    279,
+    579,
+    359
+   ],
+   [
+    347,
+    238,
+    399,
+    322
+   ],
+   [
+    405,
+    242,
+    444,
+    301
+   ],
+   [
+    754,
+    128,
+    930,
+    399
+   ],
+   [
+    959,
+    0,
+    989,
+    65
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00567.jpg",
+  "known": [
+   [
+    "people/person",
+    0.819
+   ],
+   [
+    "people/person",
+    0.826
+   ],
+   [
+    "people/limbs/arm",
+    0.854
+   ],
+   [
+    "people/person",
+    0.742
+   ],
+   [
+    "people/limbs/leg",
+    0.802
+   ],
+   [
+    "people/person",
+    0.791
+   ],
+   [
+    "people/limbs/leg",
+    0.813
+   ],
+   [
+    "people/limbs/arm",
+    0.809
+   ]
+  ],
+  "pred": [
+   510,
+   816,
+   612,
+   918
+  ],
+  "iou": 0.0,
+  "best_candidate_iou": 0.22992281162752504,
+  "correct": false,
+  "part": "arm"
+ },
+ {
+  "qid": "locate_089",
+  "task": "locate",
+  "truth": [
+   [
+    382,
+    377,
+    446,
+    453
+   ],
+   [
+    599,
+    398,
+    642,
+    453
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00587.jpg",
+  "known": [
+   [
+    "people/limbs/leg",
+    0.817
+   ],
+   [
+    "people/limbs/leg",
+    0.858
+   ],
+   [
+    "people/person",
+    0.82
+   ],
+   [
+    "people/limbs/arm",
+    0.827
+   ],
+   [
+    "people/limbs/arm",
+    0.817
+   ]
+  ],
+  "pred": [
+   119,
+   600,
+   185,
+   794
+  ],
+  "iou": 0.0,
+  "best_candidate_iou": 0.12612479716772385,
+  "correct": false,
+  "part": "head"
+ },
+ {
+  "qid": "locate_090",
+  "task": "locate",
+  "truth": [
+   [
+    243,
+    195,
+    387,
+    337
+   ],
+   [
+    275,
+    156,
+    397,
+    216
+   ],
+   [
+    577,
+    453,
+    720,
+    595
+   ],
+   [
+    707,
+    461,
+    772,
+    576
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00577.jpg",
+  "known": [
+   [
+    "people/limbs/hand",
+    0.867
+   ],
+   [
+    "people/limbs/hand",
+    0.827
+   ],
+   [
+    "people/limbs/hand",
+    0.841
+   ],
+   [
+    "people/limbs/arm",
+    0.761
+   ],
+   [
+    "people/person",
+    0.821
+   ],
+   [
+    "people/limbs/arm",
+    0.762
+   ],
+   [
+    "people/limbs/hand",
+    0.819
+   ],
+   [
+    "people/limbs/arm",
+    0.824
+   ]
+  ],
+  "pred": [
+   241,
+   157,
+   419,
+   381
+  ],
+  "iou": 0.5128410914927769,
+  "best_candidate_iou": 0.759122547985657,
+  "correct": true,
+  "part": "hand"
+ },
+ {
+  "qid": "locate_091",
+  "task": "locate",
+  "truth": [
+   [
+    0,
+    822,
+    37,
+    878
+   ],
+   [
+    35,
+    351,
+    110,
+    417
+   ],
+   [
+    35,
+    806,
+    102,
+    873
+   ],
+   [
+    71,
+    875,
+    151,
+    941
+   ],
+   [
+    137,
+    13,
+    206,
+    89
+   ],
+   [
+    233,
+    113,
+    359,
+    242
+   ],
+   [
+    363,
+    163,
+    442,
+    256
+   ],
+   [
+    404,
+    7,
+    476,
+    88
+   ],
+   [
+    473,
+    136,
+    541,
+    218
+   ],
+   [
+    499,
+    880,
+    578,
+    941
+   ],
+   [
+    528,
+    786,
+    599,
+    856
+   ],
+   [
+    537,
+    317,
+    599,
+    400
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00128.jpg",
+  "known": [
+   [
+    "people/person",
+    0.814
+   ],
+   [
+    "people/limbs/arm",
+    0.768
+   ],
+   [
+    "people/limbs/arm",
+    0.768
+   ],
+   [
+    "people/person",
+    0.771
+   ],
+   [
+    "people/person",
+    0.788
+   ],
+   [
+    "people/person",
+    0.799
+   ],
+   [
+    "people/face_region/hair",
+    0.829
+   ]
+  ],
+  "pred": [
+   459,
+   306,
+   561,
+   408
+  ],
+  "iou": 0.14692432512169937,
+  "best_candidate_iou": 0.34330115375559217,
+  "correct": false,
+  "part": "head"
+ },
+ {
+  "qid": "locate_092",
+  "task": "locate",
+  "truth": [
+   [
+    230,
+    0,
+    819,
+    543
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01510.jpg",
+  "known": [],
+  "pred": [
+   228,
+   380,
+   381,
+   533
+  ],
+  "iou": 0.0721668806402339,
+  "best_candidate_iou": 0.0721668806402339,
+  "correct": false,
+  "part": "head"
+ },
+ {
+  "qid": "locate_093",
+  "task": "locate",
+  "truth": [
+   [
+    303,
+    156,
+    700,
+    606
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01596.jpg",
+  "known": [
+   [
+    "people/person",
+    0.79
+   ],
+   [
+    "people/face_region/hair",
+    0.764
+   ]
+  ],
+  "pred": [
+   384,
+   256,
+   640,
+   512
+  ],
+  "iou": 0.36684019031626086,
+  "best_candidate_iou": 0.36684019031626086,
+  "correct": false,
+  "part": "face"
+ },
+ {
+  "qid": "locate_094",
+  "task": "locate",
+  "truth": [
+   [
+    374,
+    133,
+    506,
+    243
+   ],
+   [
+    670,
+    467,
+    778,
+    624
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00768.jpg",
+  "known": [
+   [
+    "people/face_region/hair",
+    0.728
+   ],
+   [
+    "people/limbs/arm",
+    0.78
+   ],
+   [
+    "people/limbs/hand",
+    0.782
+   ],
+   [
+    "people/limbs/arm",
+    0.782
+   ]
+  ],
+  "pred": [
+   357,
+   153,
+   459,
+   255
+  ],
+  "iou": 0.44286210489753386,
+  "best_candidate_iou": 0.4845360824742268,
+  "correct": false,
+  "part": "hand"
+ },
+ {
+  "qid": "locate_095",
+  "task": "locate",
+  "truth": [
+   [
+    186,
+    397,
+    329,
+    682
+   ],
+   [
+    719,
+    444,
+    915,
+    682
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01233.jpg",
+  "known": [
+   [
+    "people/person",
+    0.794
+   ]
+  ],
+  "pred": [
+   256,
+   384,
+   512,
+   640
+  ],
+  "iou": 0.20032297407173186,
+  "best_candidate_iou": 0.44768492231456153,
+  "correct": false,
+  "part": "arm"
+ },
+ {
+  "qid": "locate_096",
+  "task": "locate",
+  "truth": [
+   [
+    247,
+    9,
+    423,
+    210
+   ],
+   [
+    452,
+    113,
+    557,
+    270
+   ],
+   [
+    648,
+    173,
+    748,
+    288
+   ],
+   [
+    736,
+    202,
+    807,
+    299
+   ],
+   [
+    869,
+    128,
+    938,
+    220
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00292.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.806
+   ],
+   [
+    "people/person",
+    0.704
+   ],
+   [
+    "people/person",
+    0.704
+   ],
+   [
+    "people/person",
+    0.845
+   ],
+   [
+    "people/face_region/face",
+    0.748
+   ],
+   [
+    "people/person",
+    0.78
+   ],
+   [
+    "people/person",
+    0.719
+   ]
+  ],
+  "pred": [
+   612,
+   0,
+   714,
+   102
+  ],
+  "iou": 0.0,
+  "best_candidate_iou": 0.13254203758654798,
+  "correct": false,
+  "part": "head"
+ },
+ {
+  "qid": "locate_097",
+  "task": "locate",
+  "truth": [
+   [
+    62,
+    428,
+    145,
+    500
+   ],
+   [
+    361,
+    307,
+    406,
+    387
+   ],
+   [
+    390,
+    343,
+    597,
+    514
+   ],
+   [
+    415,
+    311,
+    449,
+    385
+   ],
+   [
+    751,
+    311,
+    894,
+    562
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00332.jpg",
+  "known": [
+   [
+    "people/limbs/arm",
+    0.843
+   ],
+   [
+    "people/limbs/arm",
+    0.765
+   ],
+   [
+    "people/face_region/mouth",
+    0.878
+   ],
+   [
+    "people/person",
+    0.896
+   ],
+   [
+    "people/limbs/arm",
+    0.788
+   ],
+   [
+    "people/face_region/head",
+    0.744
+   ],
+   [
+    "people/person",
+    0.772
+   ]
+  ],
+  "pred": [
+   561,
+   51,
+   663,
+   153
+  ],
+  "iou": 0.0,
+  "best_candidate_iou": 0.2991892598727225,
+  "correct": false,
+  "part": "arm"
+ },
+ {
+  "qid": "locate_098",
+  "task": "locate",
+  "truth": [
+   [
+    350,
+    435,
+    1008,
+    626
+   ],
+   [
+    426,
+    373,
+    987,
+    704
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_01643.jpg",
+  "known": [
+   [
+    "people/person",
+    0.785
+   ],
+   [
+    "people/person",
+    0.846
+   ],
+   [
+    "people/limbs/arm",
+    0.802
+   ],
+   [
+    "people/limbs/arm",
+    0.795
+   ]
+  ],
+  "pred": [
+   608,
+   456,
+   761,
+   609
+  ],
+  "iou": 0.18626171644997533,
+  "best_candidate_iou": 0.2698369565217391,
+  "correct": false,
+  "part": "leg"
+ },
+ {
+  "qid": "locate_099",
+  "task": "locate",
+  "truth": [
+   [
+    0,
+    0,
+    949,
+    768
+   ]
+  ],
+  "image": "/home/arkin/code/mosaic/data/human/images/oi_00412.jpg",
+  "known": [],
+  "pred": [
+   612,
+   0,
+   1021,
+   409
+  ],
+  "iou": 0.18177058606319565,
+  "best_candidate_iou": 0.9387037468603537,
+  "correct": false,
+  "part": "head"
+ }
+]

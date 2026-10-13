@@ -1,0 +1,88 @@
+{
+  "percentile": 3.0,
+  "band": 0.05,
+  "leaves": {
+    "people/person": {
+      "counter_examples": 2603,
+      "reject_margin": -0.0174,
+      "gate": 0.6747
+    },
+    "people/face_region/head": {
+      "counter_examples": 1844,
+      "reject_margin": 0.0028,
+      "gate": 0.7161
+    },
+    "people/face_region/face": {
+      "counter_examples": 1651,
+      "reject_margin": 0.0221,
+      "gate": 0.7213
+    },
+    "people/face_region/hair": {
+      "counter_examples": 2079,
+      "reject_margin": -0.0128,
+      "gate": 0.7018
+    },
+    "people/face_region/eye": {
+      "counter_examples": 158,
+      "reject_margin": 0.0158,
+      "gate": 0.8586
+    },
+    "people/face_region/nose": {
+      "counter_examples": 209,
+      "reject_margin": 0.0128,
+      "gate": 0.8454
+    },
+    "people/face_region/mouth": {
+      "counter_examples": 722,
+      "reject_margin": -0.0153,
+      "gate": 0.7693
+    },
+    "people/face_region/ear": {
+      "counter_examples": 271,
+      "reject_margin": 0.0285,
+      "gate": 0.8235
+    },
+    "people/limbs/arm": {
+      "counter_examples": 1712,
+      "reject_margin": -0.0438,
+      "gate": 0.7411
+    },
+    "people/limbs/hand": {
+      "counter_examples": 1073,
+      "reject_margin": -0.0287,
+      "gate": 0.7707
+    },
+    "people/limbs/leg": {
+      "counter_examples": 1625,
+      "reject_margin": -0.0603,
+      "gate": 0.7325
+    },
+    "people/limbs/foot": {
+      "counter_examples": 728,
+      "reject_margin": -0.0304,
+      "gate": 0.7628
+    }
+  },
+  "test": {
+    "human parts (test, ground-truth crops)": {
+      "n": 3407,
+      "accepted_before": 0.9102,
+      "accepted_after": 0.8929
+    },
+    "non-human, Open Images objects (test)": {
+      "n": 401,
+      "rejected_before": 0.3815,
+      "rejected_after": 0.6534
+    },
+    "non-human, seen categories (test photos)": {
+      "n": 707,
+      "rejected_before": 0.5997,
+      "rejected_after": 0.925
+    },
+    "non-human, held-out categories": {
+      "n": 612,
+      "rejected_before": 0.652,
+      "rejected_after": 0.8807
+    }
+  }
+}

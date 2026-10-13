@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mosaic"
 version = "0.1.0"
-description = "Modular Object-agnostic Semantic Architecture with Indexed Concepts"
+description = "MOSAIC: plug-in visual knowledge and body geometry as MCP tools for a text-only LLM"
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.26"]
 
@@ -21,6 +21,9 @@ dev = ["pytest"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+mosaic = ["people_rules.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

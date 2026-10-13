@@ -1,0 +1,296 @@
+[
+  {
+    "name": "left_elbow_angle",
+    "expression": "angle(left_shoulder, left_elbow, left_wrist)",
+    "description": "left elbow angle in degrees (180 = arm straight)",
+    "kind": "fact"
+  },
+  {
+    "name": "left_knee_angle",
+    "expression": "angle(left_hip, left_knee, left_ankle)",
+    "description": "left knee angle in degrees (180 = leg straight)",
+    "kind": "fact"
+  },
+  {
+    "name": "left_upper_arm",
+    "expression": "direction(left_shoulder, left_elbow)",
+    "description": "which way the left upper arm goes from the shoulder",
+    "kind": "fact"
+  },
+  {
+    "name": "left_forearm",
+    "expression": "direction(left_elbow, left_wrist)",
+    "description": "which way the left forearm goes from the elbow",
+    "kind": "fact"
+  },
+  {
+    "name": "left_elbow_turn",
+    "expression": "turn(left_shoulder, left_elbow, left_wrist)",
+    "description": "at the left elbow, which way the arm turns (image frame): left / right / straight",
+    "kind": "fact"
+  },
+  {
+    "name": "left_forearm_folds_in",
+    "expression": "toward(left_elbow, left_wrist, neck)",
+    "description": "the left forearm comes back toward the body",
+    "kind": "fact"
+  },
+  {
+    "name": "left_arm_straight",
+    "expression": "left_elbow_angle >= 150",
+    "description": "left arm straight",
+    "kind": "fact"
+  },
+  {
+    "name": "left_arm_bent",
+    "expression": "left_elbow_angle < 120",
+    "description": "left arm clearly bent",
+    "kind": "fact"
+  },
+  {
+    "name": "left_arm_hanging",
+    "expression": "goes(left_shoulder, left_elbow, \"down\", 30) and goes(left_elbow, left_wrist, \"down\", 35)",
+    "description": "left arm hangs down by the side",
+    "kind": "fact"
+  },
+  {
+    "name": "left_arm_L",
+    "expression": "goes(left_shoulder, left_elbow, \"down\", 35) and between(left_elbow_angle, 60, 120)",
+    "description": "left upper arm goes down from the shoulder, then the arm turns at the elbow (forearm out or up: carrying, holding, gesturing)",
+    "kind": "fact"
+  },
+  {
+    "name": "left_arm_raised",
+    "expression": "goes(left_shoulder, left_wrist, \"up\", 60)",
+    "description": "left arm raised: the wrist is up from the shoulder (within 60 degrees of straight up)",
+    "kind": "fact"
+  },
+  {
+    "name": "left_arm_pointing",
+    "expression": "left_arm_straight and dist(left_wrist, neck) > 0.9 and not goes(left_shoulder, left_wrist, \"down\", 30)",
+    "description": "left arm extended away from the body (pointing, reaching)",
+    "kind": "fact"
+  },
+  {
+    "name": "left_pointing_direction",
+    "expression": "direction(left_shoulder, left_wrist) if left_arm_pointing else \"none\"",
+    "description": "where the left arm points (image frame)",
+    "kind": "fact"
+  },
+  {
+    "name": "right_elbow_angle",
+    "expression": "angle(right_shoulder, right_elbow, right_wrist)",
+    "description": "right elbow angle in degrees (180 = arm straight)",
+    "kind": "fact"
+  },
+  {
+    "name": "right_knee_angle",
+    "expression": "angle(right_hip, right_knee, right_ankle)",
+    "description": "right knee angle in degrees (180 = leg straight)",
+    "kind": "fact"
+  },
+  {
+    "name": "right_upper_arm",
+    "expression": "direction(right_shoulder, right_elbow)",
+    "description": "which way the right upper arm goes from the shoulder",
+    "kind": "fact"
+  },
+  {
+    "name": "right_forearm",
+    "expression": "direction(right_elbow, right_wrist)",
+    "description": "which way the right forearm goes from the elbow",
+    "kind": "fact"
+  },
+  {
+    "name": "right_elbow_turn",
+    "expression": "turn(right_shoulder, right_elbow, right_wrist)",
+    "description": "at the right elbow, which way the arm turns (image frame): left / right / straight",
+    "kind": "fact"
+  },
+  {
+    "name": "right_forearm_folds_in",
+    "expression": "toward(right_elbow, right_wrist, neck)",
+    "description": "the right forearm comes back toward the body",
+    "kind": "fact"
+  },
+  {
+    "name": "right_arm_straight",
+    "expression": "right_elbow_angle >= 150",
+    "description": "right arm straight",
+    "kind": "fact"
+  },
+  {
+    "name": "right_arm_bent",
+    "expression": "right_elbow_angle < 120",
+    "description": "right arm clearly bent",
+    "kind": "fact"
+  },
+  {
+    "name": "right_arm_hanging",
+    "expression": "goes(right_shoulder, right_elbow, \"down\", 30) and goes(right_elbow, right_wrist, \"down\", 35)",
+    "description": "right arm hangs down by the side",
+    "kind": "fact"
+  },
+  {
+    "name": "right_arm_L",
+    "expression": "goes(right_shoulder, right_elbow, \"down\", 35) and between(right_elbow_angle, 60, 120)",
+    "description": "right upper arm goes down from the shoulder, then the arm turns at the elbow (forearm out or up: carrying, holding, gesturing)",
+    "kind": "fact"
+  },
+  {
+    "name": "right_arm_raised",
+    "expression": "goes(right_shoulder, right_wrist, \"up\", 60)",
+    "description": "right arm raised: the wrist is up from the shoulder (within 60 degrees of straight up)",
+    "kind": "fact"
+  },
+  {
+    "name": "right_arm_pointing",
+    "expression": "right_arm_straight and dist(right_wrist, neck) > 0.9 and not goes(right_shoulder, right_wrist, \"down\", 30)",
+    "description": "right arm extended away from the body (pointing, reaching)",
+    "kind": "fact"
+  },
+  {
+    "name": "right_pointing_direction",
+    "expression": "direction(right_shoulder, right_wrist) if right_arm_pointing else \"none\"",
+    "description": "where the right arm points (image frame)",
+    "kind": "fact"
+  },
+  {
+    "name": "hands_up",
+    "expression": "above(left_wrist, nose) and above(right_wrist, nose)",
+    "description": "both wrists above the nose",
+    "kind": "fact"
+  },
+  {
+    "name": "arms_spread",
+    "expression": "left_arm_straight and right_arm_straight and not goes(left_shoulder, left_wrist, \"down\", 45) and not goes(right_shoulder, right_wrist, \"down\", 45)",
+    "description": "both arms straight and held out from the body",
+    "kind": "fact"
+  },
+  {
+    "name": "hand_near_face",
+    "expression": "dist(left_hand, nose) < 0.45 or dist(right_hand, nose) < 0.45",
+    "description": "a hand is at the face (eating, phoning, touching face)",
+    "kind": "fact"
+  },
+  {
+    "name": "hands_together",
+    "expression": "dist(left_hand, right_hand) < 0.3",
+    "description": "the two hands are together (clapping, holding one thing)",
+    "kind": "fact"
+  },
+  {
+    "name": "arms_crossed",
+    "expression": "dist(left_wrist, right_elbow) < 0.45 and dist(right_wrist, left_elbow) < 0.45",
+    "description": "arms folded across the chest",
+    "kind": "fact"
+  },
+  {
+    "name": "hands_on_hips",
+    "expression": "dist(left_hand, left_hip) < 0.35 and dist(right_hand, right_hip) < 0.35 and left_arm_bent and right_arm_bent",
+    "description": "both hands on the hips, elbows out",
+    "kind": "fact"
+  },
+  {
+    "name": "facing",
+    "expression": "\"sideways\" if dist(left_shoulder, right_shoulder) < 0.35 else (\"camera\" if right_of(left_shoulder, right_shoulder) else \"away\")",
+    "description": "torso facing the camera, away from it, or sideways (shoulders narrow relative to the torso). Facing the camera, the person's left shoulder is on the image right",
+    "kind": "fact"
+  },
+  {
+    "name": "head_toward",
+    "expression": "\"image right\" if right_of(nose, neck) else \"image left\"",
+    "description": "which side of the image the face is turned toward",
+    "kind": "fact"
+  },
+  {
+    "name": "upright",
+    "expression": "goes(mid_hip, neck, \"up\", 30)",
+    "description": "torso vertical (standing, sitting or kneeling, not lying or bent over)",
+    "kind": "fact"
+  },
+  {
+    "name": "torso_horizontal",
+    "expression": "goes(mid_hip, neck, \"left\", 35) or goes(mid_hip, neck, \"right\", 35)",
+    "description": "torso horizontal (lying, on all fours, bent over)",
+    "kind": "fact"
+  },
+  {
+    "name": "on_all_fours",
+    "expression": "torso_horizontal and left_arm_hanging and right_arm_hanging and (left_knee_angle < 120 or right_knee_angle < 120)",
+    "description": "hands and knees on the ground",
+    "kind": "fact"
+  },
+  {
+    "name": "torso_lean",
+    "expression": "heading(mid_hip, neck) - 90",
+    "description": "degrees the torso leans from vertical; positive = toward the image left",
+    "kind": "fact"
+  },
+  {
+    "name": "sitting",
+    "expression": "upright and (goes(left_hip, left_knee, \"left\", 40) or goes(left_hip, left_knee, \"right\", 40) or goes(right_hip, right_knee, \"left\", 40) or goes(right_hip, right_knee, \"right\", 40)) and (left_knee_angle < 140 or right_knee_angle < 140)",
+    "description": "upright torso, a thigh roughly horizontal and a knee bent",
+    "kind": "fact"
+  },
+  {
+    "name": "standing",
+    "expression": "upright and left_knee_angle >= 150 and right_knee_angle >= 150 and below(left_ankle, left_knee) and below(right_ankle, right_knee)",
+    "description": "upright with both legs straight under the body",
+    "kind": "fact"
+  },
+  {
+    "name": "squatting",
+    "expression": "upright and left_knee_angle < 100 and right_knee_angle < 100",
+    "description": "both knees deeply bent, torso upright",
+    "kind": "fact"
+  },
+  {
+    "name": "wide_stance",
+    "expression": "dist(left_ankle, right_ankle) > 0.6",
+    "description": "feet far apart (walking, running, wide stance)",
+    "kind": "fact"
+  },
+  {
+    "name": "left_arm_proportions",
+    "expression": "between(dist(left_shoulder, left_elbow) / dist(left_elbow, left_wrist), 0.4, 2.5)",
+    "description": "left upper arm and forearm are about the same length (allowing for foreshortening)",
+    "kind": "constraint"
+  },
+  {
+    "name": "left_leg_proportions",
+    "expression": "between(dist(left_hip, left_knee) / dist(left_knee, left_ankle), 0.4, 2.5)",
+    "description": "left thigh and shin are about the same length (allowing for foreshortening)",
+    "kind": "constraint"
+  },
+  {
+    "name": "right_arm_proportions",
+    "expression": "between(dist(right_shoulder, right_elbow) / dist(right_elbow, right_wrist), 0.4, 2.5)",
+    "description": "right upper arm and forearm are about the same length (allowing for foreshortening)",
+    "kind": "constraint"
+  },
+  {
+    "name": "right_leg_proportions",
+    "expression": "between(dist(right_hip, right_knee) / dist(right_knee, right_ankle), 0.4, 2.5)",
+    "description": "right thigh and shin are about the same length (allowing for foreshortening)",
+    "kind": "constraint"
+  },
+  {
+    "name": "upper_arms_match",
+    "expression": "between(dist(left_shoulder, left_elbow) / dist(right_shoulder, right_elbow), 0.4, 2.5)",
+    "description": "the two upper arms are of similar length",
+    "kind": "constraint"
+  },
+  {
+    "name": "head_above_neck_if_upright",
+    "expression": "not upright or above(nose, neck)",
+    "description": "an upright person's nose is above the shoulders",
+    "kind": "constraint"
+  },
+  {
+    "name": "eyes_near_nose",
+    "expression": "dist(left_eye, nose) < 0.5 and dist(right_eye, nose) < 0.5",
+    "description": "the eyes sit close to the nose",
+    "kind": "constraint"
+  }
+]

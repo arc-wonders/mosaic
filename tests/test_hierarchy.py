@@ -120,3 +120,5 @@ def test_negatives_reject_lookalikes_and_never_route(concepts, rng):
     assert system.classify(concepts["robin"]).label == "robin"
     batch = system.classify_batch(np.stack([lookalike, concepts["robin"]]), device="cpu")
     assert batch.reasons == ["negative_margin", "known"]
+    # the leaf's own accepts() applies the same two gates (used by geometry re-ranking and candidate lists)
+    assert not leaf.accepts(lookalike) and leaf.accepts(concepts["robin"])

@@ -1,4 +1,7 @@
-"""MOSAIC: Modular Object-agnostic Semantic Architecture with Indexed Concepts."""
+"""MOSAIC: Modular Object-agnostic Semantic Architecture with Indexed Concepts.
+
+Plug-in visual knowledge and body geometry, served to a text-only LLM as MCP tools (see mosaic.server).
+"""
 
 from mosaic.encoder import Encoder, normalize
 from mosaic.matcher import Match, Matcher
