@@ -6,7 +6,8 @@ from dataclasses import dataclass
 from typing import Any, Protocol, Sequence
 
 import numpy as np
-from PIL import Image, ImageFilter
+from kornia_rs import imgproc as k_imgproc
+from PIL import Image
 
 from mosaic.encoder import Encoder
 
@@ -41,9 +42,10 @@ def cutout(image: Any, box: Box, mask: np.ndarray, pad: float = 0.1, dilate: int
     cut-out), 1 is a plain box crop. CLIP was trained on natural photos and
     recognises flat cut-outs noticeably worse, so the default keeps a faint background.
     """
-    alpha = Image.fromarray(mask.astype(np.uint8) * 255)
+    alpha_arr = mask.astype(np.uint8) * 255
     if dilate > 1:  # keep a thin rim of edge pixels
-        alpha = alpha.filter(ImageFilter.MaxFilter(dilate))
+        alpha_arr = k_imgproc.dilate(alpha_arr[..., None], kernel="box", size=(dilate, dilate))[..., 0]
+    alpha = Image.fromarray(alpha_arr)
     background = Image.blend(Image.new("RGB", image.size, NEUTRAL), image, keep)
     return crop(Image.composite(image, background, alpha), box, pad)
 
