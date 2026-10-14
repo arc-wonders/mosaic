@@ -50,6 +50,43 @@ model, in parts you can inspect, calibrate and swap. That makes some things poss
 The claim to test in the paper is a benchmark of **LLM + MOSAIC vs. a frontier VLM**, with one task group per
 row above (see the roadmap).
 
+### One real question, three answers
+
+Run 2's `locate_075`: **"Give the box of one hand"**, on a photo of two people
+(`data/human/images/oi_01037.jpg`). Ground truth has two valid hand boxes; a prediction counts if it clears
+IoU ≥ 0.5 against either one.
+
+**Gemini** (one call, sees the pixels):
+```
+ANSWER: [856, 765, 1000, 936]
+```
+IoU 0.0 — the wrong hand, and no way to tell it was wrong.
+
+**Qwen2.5-VL** (one call, sees the pixels):
+```
+[575, 928, 710, 1086]
+```
+IoU 0.472 — the right hand, just outside the hit threshold, with no signal that it was close.
+
+**Claude + MOSAIC** (7 tool calls, text only, no pixels):
+```
+1. load_image(path=".../oi_01037.jpg")                                     -> img_77
+2. pose(image_id="img_77")                     -> hands_estimated_at left_hand=[598, 1010]
+3. find_objects(image_id="img_77", region=[500,880,680,1024])              -> obj_624
+4. identify(object_id="obj_624")               -> known=false (routed to arm, box too broad)
+5. find_objects(image_id="img_77", region=[550,950,660,1024])    -> obj_651, obj_652
+6. identify(object_id="obj_652")      -> known=true, "people/limbs/hand", similarity 0.777
+7. identify(object_id="obj_651")      -> known=false (not relevant)
+
+ANSWER: [551, 950, 658, 1016]
+```
+IoU 0.535 — a hit. `pose()`'s estimated hand position said *where* to zoom; the first candidate's `identify()`
+gate rejected it as **unknown**, not as a wrong label, so the model zoomed tighter instead of guessing; the
+second candidate matched the registered hand module and got named. Every step was a fact it could check, not a
+caption read off a downsampled image.
+
+Same comparison exists for all 25 `locate` questions in `results/bench_ollama.jsonl` (`qid: locate_075` here).
+
 ## Benchmark results
 
 100 questions (presence / count / locate) against Open Images ground truth, the same images and questions for
