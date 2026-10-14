@@ -1,19 +1,26 @@
-"""Benchmark: a small text-only LLM + MOSAIC tools vs. a vision-language model, both local Qwen models on Ollama.
+"""Benchmark: a text-only LLM + MOSAIC tools vs. a vision-language model.
 
-    slm   qwen2.5:7b-instruct   never sees pixels; calls the MOSAIC MCP tools (same schemas and functions as
-                                mosaic.server, called in-process) and answers from what they return
-    vlm   qwen2.5vl:7b          gets the image itself, no tools
+    slm     qwen2.5:7b-instruct (local, Ollama)    never sees pixels; calls the MOSAIC MCP tools (same
+                                                    schemas and functions as mosaic.server, in-process)
+                                                    and answers from what they return
+    claude  claude-sonnet-5 (cloud, Anthropic API)  the same in-process MOSAIC tools, over the real
+                                                    Anthropic Messages API tool-use loop (not this CLI session)
+    vlm     qwen2.5vl:7b (local, Ollama)           gets the image itself, no tools
+    gemini  gemini-2.5-flash (cloud, Gemini API)   gets the image itself, no tools; a stronger/independent
+                                                    VLM to compare MOSAIC against, not just a 7B local model
 
 Tasks, all scored against Open Images ground truth on the *test* split (images MOSAIC never stored):
     presence  "Is there a person?"        people photos (yes) vs. animals / vehicles / fruit / food (no)
     count     "How many people?"          exact match against the annotated person boxes
     locate    "Box of one <part>"         hit if IoU >= 0.5 with any annotated box of that part
 
-    python scripts/bench_ollama.py [--n 25] [--systems vlm,slm] [--tasks presence,count,locate]
+    python scripts/bench_ollama.py [--n 25] [--systems gemini,claude,script,slm] [--tasks presence,count,locate]
 
 Answers are appended to results/bench_ollama.jsonl as they come (a rerun skips what is already there);
-the summary goes to results/bench_ollama.json. The VLM runs first and is unloaded before MOSAIC's models
-load, so both fit on one 8 GB GPU.
+the summary goes to results/bench_ollama.json. A local VLM (vlm) runs first and is unloaded before
+MOSAIC's models load, so both fit on one 8 GB GPU; gemini and claude are remote API calls and need no
+GPU budget beyond MOSAIC's own ~2.4 GB. GEMINI_API_KEY / ANTHROPIC_API_KEY must be set (exported, or in
+a repo-root .env) to use the gemini / claude systems.
 """
 
 import argparse
@@ -37,8 +44,30 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "scripts"))
 from build_people import split_of  # noqa: E402
 
+def _load_dotenv() -> None:
+    """A minimal repo-root .env loader, so GEMINI_API_KEY survives across shells without re-exporting it
+    every time. Never overrides a variable already set in the environment."""
+    env_file = REPO / ".env"
+    if not env_file.exists():
+        return
+    for line in env_file.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, v = line.split("=", 1)
+        os.environ.setdefault(k.strip(), v.strip())
+
+
+_load_dotenv()
+
 OLLAMA = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 SLM, VLM = "qwen2.5:7b-instruct", "qwen2.5vl:7b"
+GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-5")
+ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 OUT_LOG, OUT_SUM = REPO / "results/bench_ollama.jsonl", REPO / "results/bench_ollama.json"
 PARTS = ["people/face_region/face", "people/face_region/head", "people/limbs/hand", "people/limbs/foot",
          "people/limbs/arm", "people/limbs/leg"]
@@ -208,6 +237,104 @@ def run_vlm(q: dict) -> dict:
     return {"pred": pred, "reply": out, "seconds": round(time.time() - t, 1), "steps": 1}
 
 
+def gemini_generate(parts: list, retries: int = 5) -> dict:
+    if not GEMINI_KEY:
+        raise RuntimeError("GEMINI_API_KEY not set (export it, or put it in a repo-root .env)")
+    body = {"contents": [{"role": "user", "parts": parts}], "generationConfig": {"temperature": 0}}
+    url = GEMINI_URL.format(model=GEMINI_MODEL) + f"?key={GEMINI_KEY}"
+    req = urllib.request.Request(url, json.dumps(body).encode(), {"Content-Type": "application/json"})
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                return json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 500, 503) and attempt < retries - 1:  # rate limit / transient: back off and retry
+                time.sleep(2 ** attempt * 2)
+                continue
+            raise RuntimeError(f"Gemini API {e.code}: {e.read().decode()[:500]}") from None
+
+
+def anthropic_messages(messages: list, tools: list | None = None, system: str | None = None,
+                        retries: int = 5) -> dict:
+    if not ANTHROPIC_KEY:
+        raise RuntimeError("ANTHROPIC_API_KEY not set (export it, or put it in a repo-root .env)")
+    body = {"model": ANTHROPIC_MODEL, "max_tokens": 1024, "temperature": 0, "messages": messages}
+    if system:
+        body["system"] = system
+    if tools:
+        body["tools"] = tools
+    req = urllib.request.Request(ANTHROPIC_URL, json.dumps(body).encode(),
+                                 {"Content-Type": "application/json", "x-api-key": ANTHROPIC_KEY,
+                                  "anthropic-version": "2023-06-01"})
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                return json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 500, 503, 529) and attempt < retries - 1:  # rate limit / overload: back off
+                time.sleep(2 ** attempt * 2)
+                continue
+            raise RuntimeError(f"Anthropic API {e.code}: {e.read().decode()[:500]}") from None
+
+
+def claude_tools(server) -> list:
+    """The MCP server's own tool list, in Anthropic's tool-use format."""
+    tools = asyncio.run(server.mcp.list_tools())
+    return [{"name": t.name, "description": t.description, "input_schema": t.input_schema} for t in tools]
+
+
+def run_claude(q: dict, server, tools: list) -> dict:
+    """Same loop as run_slm, but against the real Anthropic API instead of a local Ollama model."""
+    system = SLM_SYSTEM + server.INSTRUCTIONS
+    messages = [{"role": "user", "content": f"Image file: {q['image']}\n\n{prompt_of(q)}"}]
+    calls, t = [], time.time()
+    out = ""
+    for step in range(MAX_STEPS):
+        last = step == MAX_STEPS - 1
+        r = anthropic_messages(messages, None if last else tools, system=system)
+        content = r.get("content", [])
+        messages.append({"role": "assistant", "content": content})
+        tool_uses = [b for b in content if b.get("type") == "tool_use"]
+        if not tool_uses:
+            out = "".join(b.get("text", "") for b in content if b.get("type") == "text")
+            break
+        results = []
+        for tu in tool_uses:
+            name, args = tu["name"], tu.get("input") or {}
+            try:
+                res = json.dumps(getattr(server, name)(**args), default=str, separators=(",", ":"))
+            except Exception as e:  # a bad call is information for the model, as over MCP
+                res = json.dumps({"error": f"{type(e).__name__}: {e}"})
+            calls.append({"tool": name, "args": args, "chars": len(res)})
+            if len(res) > RESULT_CHARS:
+                res = res[:RESULT_CHARS] + f"... [truncated, {len(res)} chars]"
+            results.append({"type": "tool_result", "tool_use_id": tu["id"], "content": res})
+        messages.append({"role": "user", "content": results})
+        if last:
+            messages.append({"role": "user", "content": "No more tool calls. " + ANSWER_RULE.format(
+                fmt=TASKS[q["task"]][1])})
+            r2 = anthropic_messages(messages, None, system=system)
+            out = "".join(b.get("text", "") for b in r2.get("content", []) if b.get("type") == "text")
+    return {"pred": parse(q["task"], out), "reply": out, "seconds": round(time.time() - t, 1),
+            "steps": len(calls), "calls": calls}
+
+
+def run_gemini(q: dict) -> dict:
+    """Same task, same prompt as run_vlm, but against a cloud model with no local GPU footprint: no
+    patch-grid resize to undo afterwards, so predicted boxes are already in the original image's pixels."""
+    img = Image.open(q["image"]).convert("RGB")
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=95)
+    text = prompt_of(q) + f" The image is {img.width}x{img.height} pixels."
+    parts = [{"text": text},
+             {"inline_data": {"mime_type": "image/jpeg", "data": base64.b64encode(buf.getvalue()).decode()}}]
+    t = time.time()
+    r = gemini_generate(parts)
+    cand = (r.get("candidates") or [{}])[0]
+    out = "".join(p.get("text", "") for p in cand.get("content", {}).get("parts", []))
+    return {"pred": parse(q["task"], out), "reply": out, "seconds": round(time.time() - t, 1), "steps": 1}
+
+
 SLM_SYSTEM = """You answer questions about an image you cannot see. You see it only through the MOSAIC tools, \
 which return structured facts (objects, identities, skeletons, measurements). Call tools to gather evidence, then \
 answer. Rules:
@@ -311,7 +438,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=25, help="questions per task (presence: n yes + n no)")
     ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--systems", default="vlm,script,slm", help="vlm, slm, script (MOSAIC, fixed policy)")
+    ap.add_argument("--systems", default="vlm,script,slm",
+                     help="vlm (local qwen2.5vl), gemini (cloud), slm, claude (cloud, MOSAIC tools), "
+                          "script (MOSAIC, fixed policy)")
     ap.add_argument("--tasks", default="presence,count,locate")
     ap.add_argument("--swap", action="store_true", help="unload the LLM before every MOSAIC call")
     a = ap.parse_args()
@@ -328,16 +457,18 @@ def main():
     for system in a.systems.split(","):
         todo = [q for q in qs if (system, q["qid"], q["image"]) not in done]
         print(f"== {system}: {len(todo)} of {len(qs)} questions to run", flush=True)
-        if system in ("slm", "script") and todo:
+        if system in ("slm", "script", "claude") and todo:
             unload(VLM)
             os.environ.setdefault("MOSAIC_TAUGHT", str(REPO / "results/bench_taught"))  # keep ./taught clean
             from mosaic import server
             tools = mcp_tools(server)
+            claude_tool_defs = claude_tools(server)
             warm_up(server)
         for i, q in enumerate(todo):
             try:
-                r = {"vlm": lambda: run_vlm(q), "slm": lambda: run_slm(q, server, tools),
-                     "script": lambda: run_script(q, server)}[system]()
+                r = {"vlm": lambda: run_vlm(q), "gemini": lambda: run_gemini(q),
+                     "slm": lambda: run_slm(q, server, tools), "script": lambda: run_script(q, server),
+                     "claude": lambda: run_claude(q, server, claude_tool_defs)}[system]()
             except Exception as e:
                 r = {"pred": None, "reply": f"ERROR {type(e).__name__}: {e}", "seconds": 0, "steps": 0}
             row = {"system": system, **q, **r, **score(q, r["pred"])}
@@ -352,7 +483,11 @@ def main():
 
     keys = {(q["qid"], q["image"]) for q in qs}
     rows = [r for (s, qid, img), r in done.items() if (qid, img) in keys]
-    summary = {"models": {"slm": SLM, "vlm": VLM, "script": "MOSAIC, fixed policy, no LLM"}, "n_per_task": a.n, "seed": a.seed, **summarise(rows)}
+    all_models = {"slm": SLM, "vlm": VLM, "gemini": GEMINI_MODEL, "claude": ANTHROPIC_MODEL,
+                  "script": "MOSAIC, fixed policy, no LLM"}
+    run_systems = {r["system"] for r in rows}
+    summary = {"models": {s: m for s, m in all_models.items() if s in run_systems},
+               "n_per_task": a.n, "seed": a.seed, **summarise(rows)}
     OUT_SUM.write_text(json.dumps(summary, indent=2))
     print(json.dumps(summary, indent=2))
 

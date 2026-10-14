@@ -1,16 +1,19 @@
-# Benchmark: a small text-only LLM + MOSAIC vs. a local VLM (Ollama, Qwen)
+# Benchmark: LLM + MOSAIC vs. vision-language models
 
-Status: **in progress** (run 2 stopped part-way on 2026-09-28). Script: `scripts/bench_ollama.py`.
+Status: **run 2 complete** except `slm`'s `locate` task. Script: `scripts/bench_ollama.py`.
 
 ## Setup
 
 | System | What it is |
 |---|---|
-| `vlm` | `qwen2.5vl:7b` given the image, no tools |
-| `slm` | `qwen2.5:7b-instruct`, text only, calling MOSAIC's 14 MCP tools (same schemas and functions as `mosaic.server`, called in-process), max 10 steps |
+| `vlm` | `qwen2.5vl:7b` (local, Ollama) given the image, no tools |
+| `gemini` | `gemini-flash-latest` (cloud) given the image, no tools — a frontier VLM, not just a 7B local one |
+| `slm` | `qwen2.5:7b-instruct` (local, Ollama), text only, calling MOSAIC's 14 MCP tools (same schemas and functions as `mosaic.server`, called in-process), max 10 steps |
+| `claude_agent` | Claude (claude-sonnet-5), text only, calling the same MOSAIC MCP tools — one Claude Code subagent per question, run through the `Workflow` tool so 100 questions fan out concurrently |
 | `script` | MOSAIC with a fixed policy and no LLM: presence = any object identified as `people/*`; count = people found by `pose`; locate = best `search()` result for the part's module |
 
-Both LLMs are the same Qwen 2.5 7B family (Q4_K_M), temperature 0, on one RTX 4060 Laptop (8 GB).
+`vlm`/`slm` are the same Qwen 2.5 7B family (Q4_K_M), temperature 0, on one RTX 4060 Laptop (8 GB).
+`gemini`/`claude_agent` are remote API calls and need no local GPU budget beyond MOSAIC's own ~2.4 GB.
 
 Tasks, 25 questions each, scored against Open Images ground truth on the **test** split (images MOSAIC never stored):
 
@@ -68,28 +71,48 @@ Presence numbers use corrected labels: 3 of the no-person photos showed people a
    riders and owners out of the counter-examples. That filter also applied to the test and held-out sets, so the rejection
    rates may be optimistic. The image-level benchmark below doesn't have this bias.
 
-## Run 2: after the fixes (partial, `results/bench_ollama.*`)
+## Run 2: after the fixes, all 5 systems (`results/bench_ollama.*`)
 
 Questions differ from run 1 for count and locate: resampling the no-person photos shifted the random draw. Compare
-systems within a run, not across runs. The `slm` system hasn't run yet.
+systems within a run, not across runs. 100 questions per system (50 presence, 25 count, 25 locate), same images and
+ground truth for every system. `slm`'s `locate` rows were never run (see Open questions).
 
-| | vlm | script |
-|---|---|---|
-| Presence, people photos | 23/25 | **24/25** |
-| Presence, no-person photos | **24/25** | 22/25 (run 1: 8/21) |
-| Count, exact / mean abs. error | **48% / 0.96** | 32% / 1.16 |
-| Locate, hit rate / mean IoU | **20% / 0.35** | 0% / 0.16 (21 of 25 done) |
+| | script | slm + MOSAIC | vlm (pixels) | gemini (pixels) | claude + MOSAIC |
+|---|---|---|---|---|---|
+| Presence, accuracy | 92% | 78% | **94%** | 90% | 92% |
+| Presence, yes / no | 96% / 88% | 96% / 60% | 92% / 96% | 92% / 88% | **100%** / 84% |
+| Count, exact match | 36% | 29% | **48%** | **48%** | 36% |
+| Count, mean abs. error | 1.08 | 1.21 | 0.96 | **0.80** | 1.00 |
+| Locate, hit rate (IoU≥0.5) | 4% | not run | 20% | **28%** | **28%** |
+| Locate, mean best IoU | 0.161 | not run | 0.353 | 0.350 | **0.359** |
+| Mean tool calls / question | 0 | 5.9 | 1 (none) | 1 (none) | 12.0 |
+
+- **Claude driving the MOSAIC tools matches a frontier VLM on `locate`** (28% hit rate, same mean IoU) and is close
+  on `presence` (92% vs 90%, with every "yes" answered right) — the clearest evidence yet for the paper's central
+  claim. It used ~12 tool calls/question on average (up to 20+ on `count`) and far more tokens than one Gemini call,
+  so this is accuracy parity bought with much more compute, not a cheaper path.
+- **`count` is still where tool-only reasoning loses to raw pixels.** Both VLMs (`vlm`, `gemini`) beat both
+  tool-driving LLMs (`slm`, `claude_agent`) by a wide margin. Reasoning from `pose`/`find_objects` facts seems to
+  undercount people that direct vision catches, especially in crowded images — worth a closer look at whether the
+  LLMs are calling `pose` enough, or MOSAIC's detector is merging adjacent people.
+- **The fixed-policy `script` baseline is MOSAIC's floor, not its ceiling.** It ties `claude_agent` on `count` (36%)
+  but is far behind on `locate` (4% vs 28%) — an LLM choosing *which* `search()`/`find_parts()` call to make, instead
+  of always taking the first result, is most of what separates "the tools exist" from "the tools answer the
+  question."
 
 ## Open questions and next steps
 
-- **Why the scripted count fell** from 68% (run 1) to 32%. The questions are different, but the counter-examples might
-  also be rejecting real persons before `pose`. To check: run the run-2 count questions with the backup modules and the
-  new ones. The pre-negatives modules are in `modules_people_pre_negatives/` (git-ignored, like every `modules_*`).
-- **Finish run 2** (`slm`): `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True PYTHONPATH=scripts .venv/bin/python
-  scripts/bench_ollama.py --n 25`. Finished rows are skipped. The LLM and MOSAIC now share the GPU (`--swap` restores
-  time-sharing).
+- **Why the scripted count fell** from 68% (run 1) to 36% (run 2). The questions are different, but the
+  counter-examples might also be rejecting real persons before `pose`. To check: run the run-2 count questions with
+  the backup modules and the new ones. The pre-negatives modules are in `modules_people_pre_negatives/`
+  (git-ignored, like every `modules_*`); `scripts/diag_count_regression.py` / `results/diag_count_regression.json`
+  started this comparison but it isn't finished.
+- **Finish `slm`'s `locate` rows**: `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv/bin/python
+  scripts/bench_ollama.py --systems slm --tasks locate`. Finished rows are skipped. The LLM and MOSAIC now share the
+  GPU (`--swap` restores time-sharing).
 - **Guide the SLM's tool use** (not yet changed, so the runs stay comparable): count with `pose`, locate with
   `search(image, "people/limbs/<part>")`.
-- **Part localisation** is the weakest capability: head / face / hair extents, and `search`'s window scan.
+- **Part localisation** is the weakest capability for every tool-driving system: head / face / hair extents, and
+  `search`'s window scan.
 - **Tasks still to add**: pose geometry (needs keypoint ground truth, e.g. COCO), and `teach` / `forget`, where a VLM
   has no equivalent.

@@ -6,24 +6,27 @@ build-backend = "setuptools.build_meta"
 name = "mosaic"
 version = "0.1.0"
 description = "MOSAIC: plug-in visual knowledge and body geometry as MCP tools for a text-only LLM"
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.26"]
 
 [project.scripts]
 mosaic-mcp = "mosaic.server:main"
+mosaic-web = "mosaic.webui:main"
 
 [project.optional-dependencies]
 clip = ["torch", "open_clip_torch", "pillow", "kornia_rs>=0.2.0"]
-vision = ["torch", "torchvision", "open_clip_torch", "pillow", "transformers", "kornia_rs>=0.2.0"]
+vision = ["torch", "torchvision", "open_clip_torch", "pillow", "transformers", "kornia_rs>=0.2.0", "scipy"]
 mcp = ["mcp>=2"]
 faiss = ["faiss-cpu"]
+web = ["flask>=3"]
 dev = ["pytest"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-mosaic = ["people_rules.json"]
+mosaic = ["people_rules.json", "web/*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

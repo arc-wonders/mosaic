@@ -1,37 +1,110 @@
 {
-  "status": "partial: vlm 100/100, script 96/100 (locate 21/25), slm not run; stopped by user 2026-09-28",
   "models": {
     "slm": "qwen2.5:7b-instruct",
     "vlm": "qwen2.5vl:7b",
+    "gemini": "gemini-flash-latest",
     "script": "MOSAIC, fixed policy, no LLM"
   },
   "n_per_task": 25,
   "seed": 0,
+  "claude_agent": {
+    "count": {
+      "n": 25,
+      "accuracy": 0.36,
+      "unparsed": 0,
+      "mean_seconds": 0.0,
+      "mean_tool_calls": 18.2,
+      "mean_abs_error": 1.0
+    },
+    "locate": {
+      "n": 25,
+      "accuracy": 0.28,
+      "unparsed": 0,
+      "mean_seconds": 0.0,
+      "mean_tool_calls": 6.3,
+      "mean_best_iou": 0.359
+    },
+    "presence": {
+      "n": 50,
+      "accuracy": 0.92,
+      "unparsed": 1,
+      "mean_seconds": 0.0,
+      "mean_tool_calls": 5.0,
+      "acc_truth_yes": 1.0,
+      "acc_truth_no": 0.84
+    }
+  },
+  "gemini": {
+    "count": {
+      "n": 25,
+      "accuracy": 0.48,
+      "unparsed": 1,
+      "mean_seconds": 8.5,
+      "mean_tool_calls": 1.0,
+      "mean_abs_error": 0.8
+    },
+    "locate": {
+      "n": 25,
+      "accuracy": 0.28,
+      "unparsed": 0,
+      "mean_seconds": 10.2,
+      "mean_tool_calls": 1.0,
+      "mean_best_iou": 0.35
+    },
+    "presence": {
+      "n": 50,
+      "accuracy": 0.9,
+      "unparsed": 0,
+      "mean_seconds": 5.0,
+      "mean_tool_calls": 1.0,
+      "acc_truth_yes": 0.92,
+      "acc_truth_no": 0.88
+    }
+  },
   "script": {
     "count": {
       "n": 25,
-      "accuracy": 0.32,
+      "accuracy": 0.36,
       "unparsed": 0,
-      "mean_seconds": 1.0,
+      "mean_seconds": 0.5,
       "mean_tool_calls": 0.0,
-      "mean_abs_error": 1.16
+      "mean_abs_error": 1.08
     },
     "locate": {
-      "n": 21,
-      "accuracy": 0.0,
+      "n": 25,
+      "accuracy": 0.04,
       "unparsed": 0,
-      "mean_seconds": 7.8,
+      "mean_seconds": 7.1,
       "mean_tool_calls": 0.0,
-      "mean_best_iou": 0.159
+      "mean_best_iou": 0.161
     },
     "presence": {
       "n": 50,
       "accuracy": 0.92,
       "unparsed": 0,
-      "mean_seconds": 0.9,
+      "mean_seconds": 0.5,
       "mean_tool_calls": 0.0,
       "acc_truth_yes": 0.96,
       "acc_truth_no": 0.88
+    }
+  },
+  "slm": {
+    "count": {
+      "n": 24,
+      "accuracy": 0.292,
+      "unparsed": 1,
+      "mean_seconds": 24.0,
+      "mean_tool_calls": 6.6,
+      "mean_abs_error": 1.21
+    },
+    "presence": {
+      "n": 50,
+      "accuracy": 0.78,
+      "unparsed": 0,
+      "mean_seconds": 13.0,
+      "mean_tool_calls": 4.6,
+      "acc_truth_yes": 0.96,
+      "acc_truth_no": 0.6
     }
   },
   "vlm": {
@@ -55,7 +128,7 @@
       "n": 50,
       "accuracy": 0.94,
       "unparsed": 1,
-      "mean_seconds": 2.2,
+      "mean_seconds": 2.1,
       "mean_tool_calls": 1.0,
       "acc_truth_yes": 0.92,
       "acc_truth_no": 0.96

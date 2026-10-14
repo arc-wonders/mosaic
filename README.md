@@ -1,13 +1,34 @@
 # MOSAIC
 
-**M**odular **O**bject-agnostic **S**emantic **A**rchitecture with **I**ndexed **C**oncepts.
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](pyproject.toml)
+[![MCP](https://img.shields.io/badge/MCP-server-green)](#mcp-tools)
+[![Status](https://img.shields.io/badge/status-research%20preview-orange)](#roadmap)
+[![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
-MOSAIC gives a **text-only LLM** sight without giving it pixels. It runs as an **MCP server**: the model
-calls tools (find objects, identify, pose, measure, teach, forget, explain), gets back structured facts it can
-check (names, boxes, similarities, joint angles), and does all the reasoning itself. No vision-language model is
-in the loop. The domain is **people**: the person, the body parts, and the body's geometry.
+**M**odular **O**bject-agnostic **S**emantic **A**rchitecture with **I**ndexed **C**oncepts — an **MCP server**
+that gives a **text-only LLM** sight without giving it pixels.
 
-Term paper: *Modular Object-Agnostic Vision Architecture Using Embedding-Based Semantic Routing* (see `../synopsis/`).
+The model calls tools (find objects, identify, pose, measure, teach, forget, explain), gets back structured
+facts it can check (names, boxes, similarities, joint angles), and does all the reasoning itself. No
+vision-language model is in the loop, and no image ever leaves your machine. The domain shipped today is
+**people**: the person, the body parts, and the body's geometry.
+
+Benchmarked against Gemini and a local Qwen VLM — [jump to results](#benchmark-results). Term paper:
+*Modular Object-Agnostic Vision Architecture Using Embedding-Based Semantic Routing* (see `../synopsis/`).
+
+## Quick start
+
+```bash
+git clone <this repo> && cd mosaic
+python3 -m venv .venv && .venv/bin/pip install -e ".[vision,mcp]"
+python scripts/fetch_human.py && python scripts/cache_human_crops.py \
+  && python scripts/compare_encoders.py --only siglip-so400m \
+  && python scripts/extract_poses.py && python scripts/build_people.py   # builds modules_people/, ~10 min on a GPU
+
+claude mcp add mosaic -- /path/to/mosaic/.venv/bin/python -m mosaic.server   # or any other MCP client
+```
+
+See [Setup](#setup) for the full build pipeline and [Usage](#usage) for the CLI / Python API / MCP registration.
 
 ## Why not just use a VLM?
 
@@ -28,6 +49,44 @@ model, in parts you can inspect, calibrate and swap. That makes some things poss
 
 The claim to test in the paper is a benchmark of **LLM + MOSAIC vs. a frontier VLM**, with one task group per
 row above (see the roadmap).
+
+## Benchmark results
+
+100 questions (presence / count / locate) against Open Images ground truth, the same images and questions for
+every system. Full methodology and discussion: [`docs/benchmark_ollama.md`](docs/benchmark_ollama.md); raw rows
+in `results/bench_ollama.jsonl`.
+
+```
+presence — "is there a person?"  (accuracy)
+script           █████████████████████████████████████░░░   92%
+slm + MOSAIC     ███████████████████████████████░░░░░░░░░   78%
+vlm (pixels)     ██████████████████████████████████████░░   94%
+gemini (pixels)  ████████████████████████████████████░░░░   90%
+claude + MOSAIC  █████████████████████████████████████░░░   92%
+
+count — "how many people?"  (exact match)
+script           ██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░   36%
+slm + MOSAIC     ████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░   29%
+vlm (pixels)     ███████████████████░░░░░░░░░░░░░░░░░░░░░   48%
+gemini (pixels)  ███████████████████░░░░░░░░░░░░░░░░░░░░░   48%
+claude + MOSAIC  ██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░   36%
+
+locate — "box of one <part>"  (IoU ≥ 0.5 hit rate)
+script           ██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    4%
+vlm (pixels)     ████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   20%
+gemini (pixels)  ███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   28%
+claude + MOSAIC  ███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   28%
+```
+
+- `vlm` / `slm` = local Qwen 2.5 7B family; `gemini` = `gemini-flash-latest`; `claude + MOSAIC` = Claude
+  (claude-sonnet-5) calling MOSAIC's MCP tools, no pixels, one subagent per question; `script` = MOSAIC with a
+  fixed policy and no LLM at all.
+- **An LLM driving MOSAIC's tools matches a frontier VLM on `locate` and comes close on `presence`** — the
+  clearest result so far for the paper's central claim — but spends far more tool calls and tokens to get there
+  (≈12 tool calls/question vs. 1 pixel-only call).
+- **`count` is still where tool-only reasoning loses to raw pixels**: both VLMs beat both tool-driving LLMs by
+  a wide margin.
+- `slm`'s `locate` rows haven't been run yet; see the doc for what's still open.
 
 ## Architecture
 
@@ -170,7 +229,7 @@ s.define_rule("waving", "left_arm_raised and left_elbow_angle < 150")
 s.teach("my_mug", ["obj_5"]); s.forget("taught/my_mug")
 ```
 
-## Results
+## Identification accuracy
 
 All encoders and sensors are frozen; nothing is fine-tuned. Raw numbers are in `results/`. Experiments 1–7
 (five domains, CLIP, the hierarchy, masks, the encoder comparison) are in
@@ -213,9 +272,10 @@ The geometry weight was chosen on the calibration split.
 - [x] Skeleton sensor (ViTPose) and the geometry rule language, with 49 default rules
 - [x] Anatomical signatures per leaf; geometry re-ranking in `identify` (experiment 8: 61.9 → 74.5%)
 - [x] Run-time `teach` / `forget` / `define_rule` / `explain`
-- [ ] **Benchmark: LLM + MOSAIC vs. a frontier VLM.** Task groups: novel-instance recognition after `teach`,
-      unlearning after `forget`, abstention on out-of-domain objects, exact pose geometry (angles, left/right,
-      counts), small-detail questions, evidence quality
+- [x] **Benchmark: LLM + MOSAIC vs. a frontier VLM — first result.** presence/count/locate on 100 questions;
+      Claude + MOSAIC matches Gemini on `locate`, trails on `count` ([results](#benchmark-results)). Still
+      missing: novel-instance recognition after `teach`, unlearning after `forget`, abstention on out-of-domain
+      objects, exact pose geometry (angles, left/right), evidence quality
 - [ ] Collection index: `index_collection` / `query_collection` over thousands of photos
 - [ ] Handheld objects as taught modules, and a "holding" evaluation (hand–object contact)
 - [ ] Head / face / hair: an extent-aware feature (the box's share of the head region)
@@ -228,3 +288,13 @@ The geometry weight was chosen on the calibration split.
 - [ ] True 3D joint angles from multi-view input: ORB-based keypoint tracking across frames plus SLAM-style
       triangulation to recover depth, replacing the current 2D image-plane approximation in `geometry.py`
       (`angle()` on projected joints is foreshortening-prone single-view)
+
+## Contributing
+
+Issues and PRs welcome — the open items in the roadmap above are the best starting points. `pytest` covers
+the core pipeline; run it before sending a PR. New domains follow the same module/registry contract as `people`
+(see [Architecture](#architecture)).
+
+## License
+
+[MIT](LICENSE).
