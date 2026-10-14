@@ -102,11 +102,25 @@ ground truth for every system. `slm`'s `locate` rows were never run (see Open qu
 
 ## Open questions and next steps
 
-- **Why the scripted count fell** from 68% (run 1) to 36% (run 2). The questions are different, but the
-  counter-examples might also be rejecting real persons before `pose`. To check: run the run-2 count questions with
-  the backup modules and the new ones. The pre-negatives modules are in `modules_people_pre_negatives/`
-  (git-ignored, like every `modules_*`); `scripts/diag_count_regression.py` / `results/diag_count_regression.json`
-  started this comparison but it isn't finished.
+- **Why the scripted count fell** from 68% (run 1) to 36% (run 2) is still open, but one hypothesis is ruled
+  out. `scripts/diag_count_regression.py` reran run 2's 25 count questions against both the pre-negatives
+  modules (`modules_people_pre_negatives/`, git-ignored like every `modules_*`) and the current ones, after
+  `pose()` was changed to filter people by `identify()`'s `routed_module` (the router's raw pick) instead of
+  the gated label (so a rejected gate can no longer silently drop a real person from the count). Both module
+  sets now score identically: 36% exact, MAE 1.08 (`results/diag_count_regression.json`). So the negatives
+  gate isn't the cause of the regression after all — something else changed between run 1 and run 2.
+- **A different, over-counting failure mode** (found outside the benchmark set, on a sprint-start photo with a
+  dense stadium-crowd background): `find_objects` can return a spurious second "person" that isn't a stray
+  detector box, but a three-stage chain. (1) OWLv2's class-agnostic objectness genuinely scores a wide,
+  short band of crowd texture as object-like (0.24, above the 0.1 threshold) — not a NMS duplicate. (2) SAM,
+  given that box, fails to isolate the sliver of real person inside it and masks most of the crowd as
+  foreground too. (3) The resulting mixed crowd+person embedding still passes the `people/person` gate, but
+  barely: similarity 0.761 against a required 0.675, beating the nearest stored negative ("sports equipment",
+  0.773) by only 0.017. `pose()` then fits a skeleton to this blob, reusing the real runner's few visible
+  joints, producing a near-duplicate "person" alongside the real one. This is the mirror image of the
+  undercount hypothesis above (the gate rejecting a real person) — here it's over-accepting a background
+  region — and is the kind of case the planned deterministic body-plan gate (see roadmap) is meant to catch:
+  a mask shaped like a thin horizontal band isn't person-shaped regardless of what it embeds as.
 - **Finish `slm`'s `locate` rows**: `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True .venv/bin/python
   scripts/bench_ollama.py --systems slm --tasks locate`. Finished rows are skipped. The LLM and MOSAIC now share the
   GPU (`--swap` restores time-sharing).
