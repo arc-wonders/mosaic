@@ -13,3 +13,7 @@ results/*.log
 results/sweep/*.log
 # modules and rules taught in MCP sessions (user data)
 taught/
+# API keys (Gemini, etc.) -- never commit
+.env
+# local MCP server registration (hardcodes this machine's absolute path)
+.mcp.json

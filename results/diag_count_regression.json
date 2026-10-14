@@ -1,0 +1,202 @@
+[
+  {
+    "image": "oi_00212.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 3,
+    "pre_negatives_raw_person_like": 6,
+    "current_pred": 3,
+    "current_raw_person_like": 6
+  },
+  {
+    "image": "oi_01564.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 5,
+    "current_pred": 1,
+    "current_raw_person_like": 4
+  },
+  {
+    "image": "oi_00883.jpg",
+    "truth": 3,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 6,
+    "current_pred": 1,
+    "current_raw_person_like": 6
+  },
+  {
+    "image": "oi_01651.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 8,
+    "current_pred": 1,
+    "current_raw_person_like": 8
+  },
+  {
+    "image": "oi_00972.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 4,
+    "pre_negatives_raw_person_like": 6,
+    "current_pred": 4,
+    "current_raw_person_like": 4
+  },
+  {
+    "image": "oi_01111.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 3,
+    "current_pred": 1,
+    "current_raw_person_like": 3
+  },
+  {
+    "image": "oi_01457.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 2,
+    "current_pred": 1,
+    "current_raw_person_like": 2
+  },
+  {
+    "image": "oi_01233.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 1,
+    "current_pred": 1,
+    "current_raw_person_like": 1
+  },
+  {
+    "image": "oi_01714.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 2,
+    "pre_negatives_raw_person_like": 5,
+    "current_pred": 2,
+    "current_raw_person_like": 3
+  },
+  {
+    "image": "oi_01025.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 2,
+    "pre_negatives_raw_person_like": 7,
+    "current_pred": 2,
+    "current_raw_person_like": 7
+  },
+  {
+    "image": "oi_01410.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 1,
+    "current_pred": 1,
+    "current_raw_person_like": 1
+  },
+  {
+    "image": "oi_01532.jpg",
+    "truth": 3,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 8,
+    "current_pred": 1,
+    "current_raw_person_like": 7
+  },
+  {
+    "image": "oi_01082.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 1,
+    "current_pred": 1,
+    "current_raw_person_like": 1
+  },
+  {
+    "image": "oi_00720.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 0,
+    "pre_negatives_raw_person_like": 4,
+    "current_pred": 0,
+    "current_raw_person_like": 4
+  },
+  {
+    "image": "oi_01509.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 2,
+    "pre_negatives_raw_person_like": 6,
+    "current_pred": 2,
+    "current_raw_person_like": 5
+  },
+  {
+    "image": "oi_00116.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 2,
+    "pre_negatives_raw_person_like": 1,
+    "current_pred": 2,
+    "current_raw_person_like": 0
+  },
+  {
+    "image": "oi_01166.jpg",
+    "truth": 3,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 2,
+    "current_pred": 1,
+    "current_raw_person_like": 2
+  },
+  {
+    "image": "oi_01131.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 4,
+    "current_pred": 1,
+    "current_raw_person_like": 4
+  },
+  {
+    "image": "oi_01081.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 3,
+    "current_pred": 1,
+    "current_raw_person_like": 3
+  },
+  {
+    "image": "oi_00016.jpg",
+    "truth": 5,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 6,
+    "current_pred": 1,
+    "current_raw_person_like": 6
+  },
+  {
+    "image": "oi_00801.jpg",
+    "truth": 4,
+    "pre_negatives_pred": 4,
+    "pre_negatives_raw_person_like": 5,
+    "current_pred": 4,
+    "current_raw_person_like": 4
+  },
+  {
+    "image": "oi_01675.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 0,
+    "current_pred": 1,
+    "current_raw_person_like": 0
+  },
+  {
+    "image": "oi_00252.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 2,
+    "current_pred": 1,
+    "current_raw_person_like": 2
+  },
+  {
+    "image": "oi_01448.jpg",
+    "truth": 2,
+    "pre_negatives_pred": 1,
+    "pre_negatives_raw_person_like": 2,
+    "current_pred": 1,
+    "current_raw_person_like": 2
+  },
+  {
+    "image": "oi_00369.jpg",
+    "truth": 1,
+    "pre_negatives_pred": 6,
+    "pre_negatives_raw_person_like": 1,
+    "current_pred": 6,
+    "current_raw_person_like": 1
+  }
+]

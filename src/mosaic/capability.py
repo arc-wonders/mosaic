@@ -365,6 +365,10 @@ class VisionSession:
         return {
             "label": pred.label,
             "module": pred.module if pred.known else None,
+            # the router's own answer even when the leaf gate rejected it ("closest, if rejected") -- unlike
+            # "module" above, this is never a flat nearest-neighbour guess across unrelated leaves, so callers
+            # that need "what domain does this object route to" (not "is it a confirmed instance") use this.
+            "routed_module": module,
             "known": pred.known,
             "reason": {"known": "matched a registered module",
                        "router": "no domain in the registry is close enough",
@@ -546,8 +550,7 @@ class VisionSession:
             o = self.objects[oid]
             if o.lookup is None:
                 o.lookup = self._lookup(o.embedding)
-            top = o.lookup["module"] or (o.lookup["candidates"][0]["module"] if o.lookup["candidates"] else None)
-            if top in roots:
+            if o.lookup["routed_module"] in roots:
                 persons.append(o)
         W, H = img.image.size
         boxes = [o.box for o in persons] or [[0, 0, W, H]]
