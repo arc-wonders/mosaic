@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOSAIC pipeline visualizer</title>
+<style>
+  :root{
+    --bg:#15171c; --panel:#1b1e25; --panel-2:#20242d; --line:#2c313c;
+    --fg:#e6e8ec; --muted:#8891a1; --frozen:#7fa0d6; --accent:#e6973f;
+    --good:#4caf7d; --bad:#d9696f; --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--fg); font-family:var(--sans); font-size:13px; }
+  header{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 14px; background:var(--panel);
+          border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; }
+  header h1{ font-size:14px; margin:0 14px 0 0; font-weight:600; letter-spacing:.02em; }
+  header .sub{ color:var(--muted); font-family:var(--mono); font-size:11px; }
+  select, input[type=text], button{ background:var(--panel-2); color:var(--fg); border:1px solid var(--line);
+          border-radius:5px; padding:5px 9px; font-size:12.5px; font-family:inherit; }
+  button{ cursor:pointer; } button:hover{ border-color:var(--frozen); }
+  button.primary{ background:var(--accent); color:#1b1206; border-color:var(--accent); font-weight:600; }
+  label.chk{ display:flex; align-items:center; gap:5px; color:var(--muted); font-size:12px; white-space:nowrap; }
+
+  .layout{ display:flex; gap:12px; padding:12px; align-items:flex-start; flex-wrap:wrap; }
+  .stage-canvas{ background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px;
+          flex:1 1 560px; min-width:0; }
+  .stage-canvas .toolbar{ display:flex; gap:14px; margin-bottom:8px; flex-wrap:wrap; }
+  #canvasWrap{ position:relative; width:100%; overflow:auto; border-radius:6px; background:#0b0c0f; }
+  #stage{ display:block; max-width:100%; cursor:crosshair; }
+  #hint{ color:var(--muted); font-size:11.5px; margin-top:6px; }
+
+  .side{ flex:1 1 420px; min-width:340px; background:var(--panel); border:1px solid var(--line); border-radius:8px;
+         padding:0; overflow:hidden; }
+  .tabs{ display:flex; border-bottom:1px solid var(--line); background:var(--panel-2); overflow-x:auto; }
+  .tabs button{ background:none; border:none; border-radius:0; padding:9px 12px; color:var(--muted); font-size:12px;
+         white-space:nowrap; }
+  .tabs button.active{ color:var(--fg); box-shadow:inset 0 -2px 0 var(--accent); }
+  .tabpanel{ display:none; padding:12px 14px; max-height:70vh; overflow-y:auto; }
+  .tabpanel.active{ display:block; }
+  .empty{ color:var(--muted); padding:20px 4px; text-align:center; font-size:12.5px; }
+
+  h3{ font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:14px 0 6px; }
+  h3:first-child{ margin-top:0; }
+  .kv{ display:grid; grid-template-columns:auto 1fr; gap:3px 10px; font-size:12.5px; margin-bottom:4px; }
+  .kv div:nth-child(odd){ color:var(--muted); }
+  .mono{ font-family:var(--mono); }
+  .pill{ display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-family:var(--mono); }
+  .pill.known{ background:#1d3327; color:var(--good); } .pill.unknown{ background:#33201f; color:var(--bad); }
+
+  .bar-row{ display:grid; grid-template-columns:120px 1fr 54px; gap:8px; align-items:center; margin:4px 0; font-size:11.5px; }
+  .bar-row .name{ font-family:var(--mono); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bar-track{ height:9px; background:var(--panel-2); border-radius:5px; overflow:hidden; border:1px solid var(--line); }
+  .bar-fill{ height:100%; background:var(--frozen); }
+  .bar-fill.chosen{ background:var(--accent); }
+  .bar-val{ font-family:var(--mono); text-align:right; color:var(--muted); }
+
+  .gate-ruler{ position:relative; height:28px; background:var(--panel-2); border:1px solid var(--line); border-radius:5px;
+          margin:6px 0 2px; }
+  .gate-ruler .tick{ position:absolute; top:0; bottom:0; width:2px; background:var(--muted); }
+  .gate-ruler .tick.threshold{ background:var(--fg); }
+  .gate-ruler .mark{ position:absolute; top:4px; width:9px; height:9px; border-radius:50%; transform:translateX(-50%); }
+  .gate-ruler .mark.ok{ background:var(--good); } .gate-ruler .mark.no{ background:var(--bad); }
+
+  .evidence{ display:flex; flex-wrap:wrap; gap:8px; }
+  .evidence figure{ margin:0; width:92px; }
+  .evidence img{ width:92px; height:92px; object-fit:cover; border-radius:5px; border:1px solid var(--line); display:block; }
+  .evidence figcaption{ font-size:10.5px; color:var(--muted); margin-top:2px; font-family:var(--mono); }
+
+  .cutout-pair{ display:flex; gap:10px; }
+  .cutout-pair figure{ flex:1; margin:0; } .cutout-pair img{ width:100%; border-radius:6px; border:1px solid var(--line); }
+  .cutout-pair figcaption{ color:var(--muted); font-size:11px; text-align:center; margin-top:4px; }
+
+  .person-card{ border:1px solid var(--line); border-radius:6px; padding:10px; margin-bottom:10px; background:var(--panel-2); }
+  .fact{ display:flex; justify-content:space-between; padding:2px 0; font-size:12px; font-family:var(--mono); }
+  .fact.true{ color:var(--good); } .fact.broken{ color:var(--bad); } .fact.unknown{ color:var(--muted); font-style:italic; }
+  .measure-row{ display:flex; gap:6px; margin-top:8px; }
+  .measure-row input{ flex:1; }
+  #measureOut{ margin-top:6px; font-family:var(--mono); font-size:12px; color:var(--muted); }
+
+  footer{ padding:10px 14px; color:var(--muted); font-size:11px; font-family:var(--mono); }
+  a{ color:var(--frozen); }
+</style>
+</head>
+<body>
+<header>
+  <h1>MOSAIC &middot; pipeline visualizer</h1>
+  <select id="sampleSelect"><option value="">sample image&hellip;</option></select>
+  <input type="file" id="fileInput" accept="image/*">
+  <span class="sub" id="status">idle</span>
+</header>
+
+<div class="layout">
+  <div class="stage-canvas">
+    <div class="toolbar">
+      <label class="chk"><input type="checkbox" id="showBoxes" checked> boxes</label>
+      <label class="chk"><input type="checkbox" id="showMask"> mask</label>
+      <label class="chk"><input type="checkbox" id="showSkeleton"> skeleton</label>
+      <button id="runPoseBtn">pose &amp; rules</button>
+    </div>
+    <div id="canvasWrap"><canvas id="stage" width="640" height="400"></canvas></div>
+    <div id="hint">Load an image, then click a box to inspect it stage by stage.</div>
+  </div>
+
+  <div class="side">
+    <div class="tabs" id="tabs">
+      <button data-tab="detect" class="active">Detect</button>
+      <button data-tab="mask">Mask &amp; cut-out</button>
+      <button data-tab="identify">Identify</button>
+      <button data-tab="routing">Routing &amp; gate</button>
+      <button data-tab="geometry">Geometry</button>
+    </div>
+    <div class="tabpanel active" id="tab-detect"><div class="empty">No object selected yet.</div></div>
+    <div class="tabpanel" id="tab-mask"><div class="empty">No object selected yet.</div></div>
+    <div class="tabpanel" id="tab-identify"><div class="empty">No object selected yet.</div></div>
+    <div class="tabpanel" id="tab-routing"><div class="empty">No object selected yet.</div></div>
+    <div class="tabpanel" id="tab-geometry"><div class="empty">No object selected yet.</div></div>
+  </div>
+</div>
+
+<div class="layout" id="poseSection" style="display:none">
+  <div class="side" style="flex:1 1 100%">
+    <div style="padding:12px 14px">
+      <h3>People &amp; rules</h3>
+      <div id="people"></div>
+    </div>
+  </div>
+</div>
+
+<footer>src/mosaic &middot; every box, mask and score here is exactly what identify() / explain() / pose() return to the MCP tools &mdash; nothing is simplified for the view.</footer>
+
+<script>
+const S = {
+  imageId: null, naturalW: 0, naturalH: 0, scale: 1,
+  objects: [], selected: null, people: [], baseImg: null,
+};
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+
+function setStatus(s){ statusEl.textContent = s; }
+
+async function api(path, opts){
+  const res = await fetch(path, opts);
+  const body = await res.json().catch(() => ({}));
+  if(!res.ok) throw new Error(body.error || res.statusText);
+  return body;
+}
+
+// ---- samples & loading -------------------------------------------------------------------
+async function loadSamples(){
+  const data = await api('/api/samples');
+  const sel = document.getElementById('sampleSelect');
+  const groups = {};
+  for(const s of data.samples){ (groups[s.group] ||= []).push(s.path); }
+  for(const [g, paths] of Object.entries(groups)){
+    const og = document.createElement('optgroup'); og.label = g;
+    for(const p of paths){
+      const o = document.createElement('option'); o.value = p; o.textContent = p.split('/').pop();
+      og.appendChild(o);
+    }
+    sel.appendChild(og);
+  }
+}
+
+document.getElementById('sampleSelect').addEventListener('change', async (e) => {
+  if(!e.target.value) return;
+  await loadImage({path: e.target.value});
+});
+document.getElementById('fileInput').addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const fd = new FormData(); fd.append('file', f);
+  await loadImage(null, fd);
+});
+
+async function loadImage(jsonBody, formData){
+  setStatus('loading image…');
+  resetSelection();
+  const info = formData
+    ? await api('/api/load', {method: 'POST', body: formData})
+    : await api('/api/load', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(jsonBody)});
+  S.imageId = info.image_id; S.naturalW = info.width; S.naturalH = info.height;
+  const img = new Image();
+  img.onload = async () => {
+    S.baseImg = img;
+    const maxW = Math.min(900, canvas.parentElement.clientWidth || 900);
+    S.scale = Math.min(1, maxW / S.naturalW);
+    canvas.width = Math.round(S.naturalW * S.scale);
+    canvas.height = Math.round(S.naturalH * S.scale);
+    draw();
+    await findObjects();
+  };
+  img.src = `/api/image/${S.imageId}?t=${Date.now()}`;
+}
+
+function resetSelection(){
+  S.objects = []; S.selected = null; S.people = [];
+  document.getElementById('poseSection').style.display = 'none';
+  for(const id of ['detect','mask','identify','routing','geometry']) emptyTab(id);
+}
+
+// ---- stage 1: detect + mask + encoder (find_objects already runs identify too) ----------------
+async function findObjects(){
+  setStatus('detecting objects…');
+  const data = await api(`/api/find_objects?image_id=${S.imageId}`);
+  S.objects = data.objects;
+  setStatus(`${S.objects.length} object(s) · zoom ${data.zoom ?? 1}`);
+  draw();
+}
+
+function colorFor(o){
+  if(o.identify_error) return '#d9696f';
+  if(!o.identify) return '#8891a1';
+  return o.identify.known ? '#4caf7d' : '#d9696f';
+}
+
+function draw(){
+  if(!S.baseImg) return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(S.baseImg, 0, 0, canvas.width, canvas.height);
+  if(document.getElementById('showBoxes').checked){
+    for(const o of S.objects){
+      const [x0,y0,x1,y1] = o.box.map(v => v * S.scale);
+      ctx.strokeStyle = colorFor(o);
+      ctx.lineWidth = (S.selected === o.object_id) ? 3 : 1.5;
+      ctx.strokeRect(x0, y0, x1-x0, y1-y0);
+      ctx.fillStyle = colorFor(o);
+      ctx.font = '11px monospace';
+      const label = o.identify_error ? 'error' : (o.identify ? (o.identify.module || '?') : '');
+      ctx.fillText(o.object_id + (label ? ' ' + label : ''), x0+3, Math.max(10,y0-4));
+    }
+  }
+  if(document.getElementById('showSkeleton').checked) drawSkeletons();
+  if(document.getElementById('showMask').checked && S.selected) drawMaskOverlay();
+}
+
+let maskImgCache = {};
+function drawMaskOverlay(){
+  const key = S.selected;
+  if(maskImgCache[key]){
+    ctx.drawImage(maskImgCache[key], 0, 0, canvas.width, canvas.height);
+  } else {
+    const im = new Image();
+    im.onload = () => { maskImgCache[key] = im; draw(); };
+    im.src = `/api/object/${key}/mask.png?t=${Date.now()}`;
+  }
+}
+
+document.getElementById('showBoxes').addEventListener('change', draw);
+document.getElementById('showMask').addEventListener('change', draw);
+document.getElementById('showSkeleton').addEventListener('change', draw);
+
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) * (canvas.width/rect.width) / S.scale;
+  const y = (e.clientY - rect.top) * (canvas.height/rect.height) / S.scale;
+  const hit = S.objects.find(o => x>=o.box[0] && x<=o.box[2] && y>=o.box[1] && y<=o.box[3]);
+  if(hit) selectObject(hit.object_id);
+});
+
+// ---- tabs ----------------------------------------------------------------------------------
+document.getElementById('tabs').addEventListener('click', (e) => {
+  if(e.target.tagName !== 'BUTTON') return;
+  for(const b of document.querySelectorAll('#tabs button')) b.classList.remove('active');
+  for(const p of document.querySelectorAll('.tabpanel')) p.classList.remove('active');
+  e.target.classList.add('active');
+  document.getElementById('tab-' + e.target.dataset.tab).classList.add('active');
+});
+
+function emptyTab(id){
+  document.getElementById('tab-' + id).innerHTML = '<div class="empty">No object selected yet.</div>';
+}
+
+function kv(pairs){
+  return '<div class="kv">' + pairs.map(([k,v]) => `<div>${k}</div><div class="mono">${v}</div>`).join('') + '</div>';
+}
+
+// ---- selecting an object: walk it through every stage -----------------------------------------
+async function selectObject(oid){
+  S.selected = oid;
+  draw();
+  const o = S.objects.find(x => x.object_id === oid);
+  renderDetect(o);
+  renderMaskCutout(o);
+  renderIdentify(o);
+  if(o.identify_error){
+    setStatus(`${oid}: identify failed — ${o.identify_error}`);
+    for(const id of ['routing','geometry']) emptyTab(id);
+    document.getElementById('tab-routing').innerHTML = `<div class="empty">identify() failed for this object: ${o.identify_error}</div>`;
+    return;
+  }
+  setStatus(`inspecting ${oid}…`);
+  try{
+    const explain = await api(`/api/object/${oid}/explain`);
+    renderRouting(explain);
+    renderGeometry(o, explain);
+    setStatus(`${oid}: ${o.identify.known ? o.identify.module : 'unknown'}`);
+  } catch(e){
+    document.getElementById('tab-routing').innerHTML = `<div class="empty">explain() failed: ${e.message}</div>`;
+    setStatus(`${oid}: explain failed — ${e.message}`);
+  }
+}
+
+function renderDetect(o){
+  document.getElementById('tab-detect').innerHTML = `
+    <h3>Detector</h3>
+    ${kv([
+      ['object', o.object_id], ['box (image px)', o.box.join(', ')],
+      ['objectness', o.objectness], ['area fraction', o.area_fraction],
+    ])}
+    <h3>Note</h3>
+    <div style="color:var(--muted)">OWLv2's objectness + box head only &mdash; no class label comes from this stage.</div>`;
+}
+
+function renderMaskCutout(o){
+  document.getElementById('tab-mask').innerHTML = `
+    <h3>SAM mask &rarr; soft cut-out</h3>
+    <div class="cutout-pair">
+      <figure><img src="/api/object/${o.object_id}/mask.png?t=${Date.now()}" style="background:#0b0c0f"><figcaption>mask (full image)</figcaption></figure>
+      <figure><img src="/api/object/${o.object_id}/cutout.png?t=${Date.now()}"><figcaption>what the encoder embeds</figcaption></figure>
+    </div>
+    <div style="color:var(--muted); margin-top:8px">Background faded toward neutral grey, not removed &mdash; CLIP-family encoders read flat cut-outs worse than a faint background.</div>`;
+}
+
+function renderIdentify(o){
+  if(o.identify_error){
+    document.getElementById('tab-identify').innerHTML = `<div class="empty">identify() failed: ${o.identify_error}</div>`;
+    return;
+  }
+  const id = o.identify;
+  const pill = id.known ? `<span class="pill known">known</span>` : `<span class="pill unknown">unknown</span>`;
+  const cands = (id.candidates||[]).map(c =>
+    `<div class="bar-row"><span class="name">${c.module}</span><div class="bar-track"><div class="bar-fill${c.module===id.module?' chosen':''}" style="width:${Math.max(0,Math.min(100,(c.similarity+1)/2*100))}%"></div></div><span class="bar-val">${c.similarity}</span></div>`
+  ).join('');
+  document.getElementById('tab-identify').innerHTML = `
+    <h3>Identify</h3>
+    ${kv([
+      ['result', (id.module || '—') + ' ' + pill],
+      ['reason', id.reason],
+      ['similarity', id.similarity ?? '—'],
+      ['votes', id.votes ?? '—'],
+      ['part_of', id.part_of ?? '—'],
+    ])}
+    <h3>Runner-up candidates (nearest stored example per leaf)</h3>
+    ${cands || '<div class="empty">none</div>'}`;
+}
+
+function evidenceThumb(image, box){
+  if(!image || !box) return `<div style="width:92px;height:92px;border-radius:5px;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;text-align:center">no source photo</div>`;
+  return `<img src="/api/evidence.png?image=${encodeURIComponent(image)}&box=${box.join(',')}">`;
+}
+
+function renderRouting(ex){
+  const levels = ex.routing.levels.map((lvl, i) => `
+    <div class="mono" style="color:var(--muted); margin:8px 0 2px">level ${i+1}</div>
+    ${lvl.map(n => `<div class="bar-row"><span class="name">${n.node}</span><div class="bar-track"><div class="bar-fill${n.node===ex.module?' chosen':''}" style="width:${Math.max(0,Math.min(100,(n.score+1)/2*100))}%"></div></div><span class="bar-val">${n.score}</span></div>`).join('')}
+  `).join('');
+  let gate = '<div class="empty">no gate (object unknown before reaching a leaf)</div>';
+  if(ex.gate){
+    const g = ex.gate;
+    const sim = g.nearest_similarity, thr = g.accepts_from;
+    const pos = v => Math.max(2, Math.min(98, (v+1)/2*100));
+    gate = `
+      ${kv([['module', g.module], ['accepts from', thr], ['nearest similarity', sim], ['calibrated as', g.calibrated_as]])}
+      <div class="gate-ruler">
+        ${thr!=null ? `<div class="tick threshold" style="left:${pos(thr)}%"></div>` : ''}
+        ${sim!=null ? `<div class="mark ${sim>=thr?'ok':'no'}" style="left:${pos(sim)}%"></div>` : ''}
+      </div>`;
+    if(g.nearest_counter_example){
+      gate += `<div style="color:var(--muted); margin-top:6px">must beat its nearest counter-example by ${g.must_beat_it_by} (counter-example similarity ${g.nearest_counter_example.similarity})</div>`;
+    }
+  }
+  const evidence = (ex.evidence||[]).map(e => `
+    <figure>${evidenceThumb(e.image, e.box)}
+    <figcaption>${e.similarity} &middot; ${e.view||''}</figcaption></figure>`).join('');
+  let runner = '';
+  if(ex.runner_up){
+    runner = `<h3>Runner-up: ${ex.runner_up.module}</h3>
+      <div class="evidence"><figure>${evidenceThumb(ex.runner_up.image, ex.runner_up.box)}
+      <figcaption>${ex.runner_up.similarity}</figcaption></figure></div>`;
+  }
+  document.getElementById('tab-routing').innerHTML = `
+    <h3>Routing (coarse &rarr; fine, domain gate ${ex.routing.domain_gate})</h3>
+    ${levels}
+    <h3>Gate</h3>
+    ${gate}
+    <h3>Evidence (nearest stored examples)</h3>
+    <div class="evidence">${evidence || '<div class="empty">none</div>'}</div>
+    ${runner}`;
+}
+
+function renderGeometry(o, ex){
+  const geo = ex.geometry;
+  if(!geo){
+    document.getElementById('tab-geometry').innerHTML = '<div class="empty">No anatomical signature for this leaf, or geometry is off.</div>';
+    return;
+  }
+  if(!geo.applied){
+    document.getElementById('tab-geometry').innerHTML = `<div class="empty">${geo.why}</div>`;
+    return;
+  }
+  const fits = (geo.best_anatomical_fits||[]).map(f =>
+    `<div class="bar-row"><span class="name">${f.module}</span><div class="bar-track"><div class="bar-fill"></div></div><span class="bar-val">${f.log_likelihood}</span></div>`).join('');
+  document.getElementById('tab-geometry').innerHTML = `
+    <h3>Anatomical signature</h3>
+    ${kv([
+      ['person', geo.person_id],
+      ['joints inside box', JSON.stringify(geo.joints_inside)],
+      ['size vs person', geo.size_vs_person],
+      ['height on person (0=top)', geo.height_on_person],
+    ])}
+    <h3>Best anatomical fits (log-likelihood)</h3>
+    ${fits}
+    <h3>Effect</h3>
+    <div class="${geo.changed ? 'fact broken' : ''}" style="padding:4px 0">${geo.changed
+      ? `changed the answer: appearance alone said <b>${geo.appearance_alone_said}</b>, the skeleton re-ranked it to <b>${o.identify.module}</b>`
+      : 'confirmed the appearance-only answer'}</div>`;
+}
+
+// ---- pose & rules -----------------------------------------------------------------------------
+document.getElementById('runPoseBtn').addEventListener('click', runPose);
+
+async function runPose(){
+  if(!S.imageId) return;
+  setStatus('estimating skeletons…');
+  const data = await api(`/api/pose?image_id=${S.imageId}`);
+  S.people = data.people;
+  document.getElementById('poseSection').style.display = '';
+  renderPeople();
+  draw();
+  setStatus(`${S.people.length} skeleton(s)`);
+}
+
+function drawSkeletons(){
+  const BONES = [
+    ['left_shoulder','right_shoulder'],['left_shoulder','left_elbow'],['left_elbow','left_wrist'],
+    ['right_shoulder','right_elbow'],['right_elbow','right_wrist'],['left_hip','right_hip'],
+    ['left_shoulder','left_hip'],['right_shoulder','right_hip'],['left_hip','left_knee'],
+    ['left_knee','left_ankle'],['right_hip','right_knee'],['right_knee','right_ankle'],
+  ];
+  for(const p of S.people){
+    const j = p.joints;
+    ctx.strokeStyle = '#e6973f'; ctx.lineWidth = 2;
+    for(const [a,b] of BONES){
+      if(j[a] && j[b]){
+        ctx.beginPath();
+        ctx.moveTo(j[a][0]*S.scale, j[a][1]*S.scale);
+        ctx.lineTo(j[b][0]*S.scale, j[b][1]*S.scale);
+        ctx.stroke();
+      }
+    }
+    ctx.fillStyle = '#7fa0d6';
+    for(const name in j){
+      ctx.beginPath();
+      ctx.arc(j[name][0]*S.scale, j[name][1]*S.scale, 3, 0, 7);
+      ctx.fill();
+    }
+  }
+}
+
+function renderPeople(){
+  const el = document.getElementById('people');
+  if(!S.people.length){ el.innerHTML = '<div class="empty">No people found (or none passed the skeleton visibility check).</div>'; return; }
+  el.innerHTML = S.people.map(p => {
+    const facts = Object.entries(p.facts).filter(([,v]) => v===true || (typeof v !== 'boolean')).map(([k,v]) =>
+      `<div class="fact true">${k}<span>${v}</span></div>`).join('');
+    const broken = p.constraints_broken.map(k => `<div class="fact broken">${k} &mdash; implausible</div>`).join('');
+    const unknownCount = Object.keys(p.unknown||{}).length;
+    return `<div class="person-card" data-pid="${p.person_id}">
+      <div class="mono" style="color:var(--muted)">${p.person_id} &middot; ${Object.keys(p.joints).length} joints seen &middot; body unit ${p.body_unit_px}px</div>
+      <div style="margin-top:6px">${facts}</div>
+      ${broken}
+      <div style="color:var(--muted); font-size:11px; margin-top:4px">${unknownCount} rule(s) unknown (missing joints)</div>
+      <div class="measure-row">
+        <input type="text" class="measureExpr" placeholder="angle(left_hip, left_knee, left_ankle)">
+        <button class="measureBtn">measure</button>
+      </div>
+      <div class="measureOut"></div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.person-card').forEach(card => {
+    const pid = card.dataset.pid;
+    card.querySelector('.measureBtn').addEventListener('click', async () => {
+      const expr = card.querySelector('.measureExpr').value.trim();
+      if(!expr) return;
+      const out = card.querySelector('.measureOut');
+      try{
+        const r = await api('/api/measure', {method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({person_id: pid, expression: expr})});
+        out.textContent = r.value === null ? `unknown (missing: ${r.missing.join(', ')})` : `= ${JSON.stringify(r.value)}`;
+      } catch(e){ out.textContent = 'error: ' + e.message; }
+    });
+  });
+}
+
+loadSamples().catch(e => setStatus('error loading samples: ' + e.message));
+</script>
+</body>
+</html>
