@@ -52,40 +52,34 @@ row above (see the roadmap).
 
 ### One real question, three answers
 
-Run 2's `locate_075`: **"Give the box of one hand"**, on a photo of two people
-(`data/human/images/oi_01037.jpg`). Ground truth has two valid hand boxes; a prediction counts if it clears
-IoU ≥ 0.5 against either one.
+Run 2's `locate_077`: **"Give the box of one head"**, on a photo of a football player
+(`data/human/images/oi_01524.jpg`, 1024×680). A prediction counts if it clears IoU ≥ 0.5 against the truth box.
 
-**Gemini** (one call, sees the pixels):
-```
-ANSWER: [856, 765, 1000, 936]
-```
-IoU 0.0 — the wrong hand, and no way to tell it was wrong.
+![Gemini and Qwen2.5-VL draw a box around most of the head, helmet and shoulders; Claude + MOSAIC and the ground truth both tightly frame just the helmet](docs/img/locate077_compare.jpg)
 
-**Qwen2.5-VL** (one call, sees the pixels):
-```
-[575, 928, 710, 1086]
-```
-IoU 0.472 — the right hand, just outside the hit threshold, with no signal that it was close.
+Green = truth. Both pixel-only VLMs answer with most of the upper body — close enough to "a person" to look
+plausible, nowhere near a *head*. Claude + MOSAIC lands tight on it.
 
-**Claude + MOSAIC** (7 tool calls, text only, no pixels):
-```
-1. load_image(path=".../oi_01037.jpg")                                     -> img_77
-2. pose(image_id="img_77")                     -> hands_estimated_at left_hand=[598, 1010]
-3. find_objects(image_id="img_77", region=[500,880,680,1024])              -> obj_624
-4. identify(object_id="obj_624")               -> known=false (routed to arm, box too broad)
-5. find_objects(image_id="img_77", region=[550,950,660,1024])    -> obj_651, obj_652
-6. identify(object_id="obj_652")      -> known=true, "people/limbs/hand", similarity 0.777
-7. identify(object_id="obj_651")      -> known=false (not relevant)
+| | answer | IoU |
+|---|---|---|
+| Gemini (one call, sees the pixels) | `[455, 0, 836, 565]` | 0.08 |
+| Qwen2.5-VL (one call, sees the pixels) | `[277, 0, 929, 737]` (taller than the image) | 0.04 |
+| **Claude + MOSAIC** (5 tool calls, text only, no pixels) | `[631, 121, 780, 320]` | **0.57** |
 
-ANSWER: [551, 950, 658, 1016]
-```
-IoU 0.535 — a hit. `pose()`'s estimated hand position said *where* to zoom; the first candidate's `identify()`
-gate rejected it as **unknown**, not as a wrong label, so the model zoomed tighter instead of guessing; the
-second candidate matched the registered hand module and got named. Every step was a fact it could check, not a
-caption read off a downsampled image.
+Claude's actual trace (5 tool calls): `load_image` → `pose` (nose/eyes/ears at roughly x=574–801, y=186–232)
+→ `find_objects` zoomed into that region, turning up two candidates → `identify` on each: one came back
+**unknown** (not confident enough to match anything), the other matched the registered
+`people/face_region/head` module and became the answer.
 
-Same comparison exists for all 25 `locate` questions in `results/bench_ollama.jsonl` (`qid: locate_075` here).
+Replaying the same photo and region through a live session shows what that reject/accept split looks like —
+here, one of the candidates the zoom turns up is a sliver routed to `eye` (too narrow to be a head), next to
+the one the `head` module actually accepts:
+
+![Two crops of the same helmet: a small box around one eye marked reject, a box around the whole visor and helmet front marked accept as people/face_region/head](docs/img/locate077_zoom.jpg)
+
+Same comparison exists for all 25 `locate` questions in `results/bench_ollama.jsonl` (`qid: locate_077` here).
+*Photo from [Open Images](https://storage.googleapis.com/openimages/web/index.html) (CC BY 2.0), via the
+`finedet/openimages` mirror — per-photo author credit wasn't retained by the fetch pipeline.*
 
 ## Benchmark results
 
